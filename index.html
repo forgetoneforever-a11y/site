@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember — Знакомства</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ЭКРАН 1: Выбор языка -->
+    <div class="screen active" id="screen-language">
+        <h1>Выбери язык</h1>
+        <p class="subtitle">Удобный тебе язык</p>
+        
+        <div class="lang-grid">
+            <button class="lang-btn active" data-lang="ru">🇷🇺 Русский</button>
+            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="ua">🇺🇦 Українська</button>
+            <button class="lang-btn" data-lang="sr">🇷🇸 Srpski</button>
+        </div>
+        
+        <button class="btn-next" onclick="nextScreen()">Далее</button>
+    </div>
+
+    <!-- ЭКРАН 2: Имя -->
+    <div class="screen" id="screen-name">
+        <h1>Познакомимся?</h1>
+        <p class="subtitle">Начнем с твоего имени</p>
+        
+        <label>ИМЯ</label>
+        <input type="text" id="input-name" placeholder="От 2 до 32 символов" maxlength="32">
+        
+        <label>НИКНЕЙМ</label>
+        <input type="text" id="input-nickname" placeholder="@ashqua">
+        <p class="hint">Необязательно — можно не указывать</p>
+        
+        <button class="btn-next" onclick="nextScreen()">Далее</button>
+    </div>
+
+    <!-- ЭКРАН 3: Пол -->
+    <div class="screen" id="screen-gender">
+        <h1>Кто ты?</h1>
+        <p class="subtitle">И кого мы будем искать</p>
+        
+        <label>Я</label>
+        <div class="choice-group" data-group="my-gender">
+            <div class="choice" data-value="male" onclick="selectChoice(this)">
+                <span class="icon blue">👤</span> Парень
+            </div>
+            <div class="choice" data-value="female" onclick="selectChoice(this)">
+                <span class="icon pink">👤</span> Девушка
+            </div>
+        </div>
+        
+        <label>ХОЧУ ИСКАТЬ</label>
+        <div class="choice-group" data-group="looking-for">
+            <div class="choice" data-value="male" onclick="selectChoice(this)">
+                <span class="icon blue">👤</span> Парней
+            </div>
+            <div class="choice" data-value="female" onclick="selectChoice(this)">
+                <span class="icon pink">👤</span> Девушек
+            </div>
+            <div class="choice" data-value="any" onclick="selectChoice(this)">
+                <span class="icon green">👤</span> Без разницы
+            </div>
+        </div>
+        
+        <button class="btn-next" onclick="nextScreen()">Далее</button>
+    </div>
+
+    <!-- ЭКРАН 4: Возраст -->
+    <div class="screen" id="screen-age">
+        <h1>Кто ты?</h1>
+        <p class="subtitle">И кого мы будем искать</p>
+        
+        <label>ТВОЙ ВОЗРАСТ</label>
+        <div class="slider-row">
+            <span id="my-age-value">18</span>
+            <input type="range" min="18" max="99" value="18" 
+                   oninput="document.getElementById('my-age-value').innerText = this.value">
+        </div>
+        
+        <label>РАМКИ В КОТОРЫХ ИЩЕМ</label>
+        <div class="slider-row">
+            <span id="min-age-value">18</span>
+            <input type="range" min="18" max="99" value="18"
+                   oninput="document.getElementById('min-age-value').innerText = this.value">
+            <input type="range" min="18" max="99" value="28"
+                   oninput="document.getElementById('max-age-value').innerText = this.value">
+            <span id="max-age-value">28</span>
+        </div>
+        
+        <button class="btn-next" onclick="nextScreen()">Далее</button>
+    </div>
+
+    <!-- ЭКРАН 5: Описание -->
+    <div class="screen" id="screen-bio">
+        <h1>Познакомимся?</h1>
+        <p class="subtitle">Напиши что-то о себе</p>
+        
+        <label>ОПИСАНИЕ</label>
+        <textarea id="input-bio" rows="6" placeholder="Расскажи о себе..."></textarea>
+        
+        <div class="hint-box">
+            💡 Пользователи с интересным описанием получают на 25% больше лайков
+        </div>
+        
+        <button class="btn-next" onclick="finishOnboarding()">Далее</button>
+        <button class="btn-skip" onclick="finishOnboarding()">Пропустить</button>
+    </div>
+
+    <!-- ЭКРАН 6: Готово -->
+    <div class="screen" id="screen-done">
+        <h1>Готово! 🎉</h1>
+        <p class="subtitle">Твоя анкета создана</p>
+        <div id="result" class="result-box"></div>
+        <button class="btn-next" onclick="restart()">Начать заново</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
