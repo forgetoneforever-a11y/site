@@ -2,8 +2,8 @@ let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
 
-// 🌐 URL твоего backend на Render — ЗАМЕНИ на свой!
-const API_URL = "https://ember-backend.onrender.com";
+// 🌐 URL твоего backend на Render
+const API_URL = "https://backend-2tcl.onrender.com";
 
 // 🔑 Проверка: зарегистрирован ли пользователь
 function isRegistered() {
@@ -63,8 +63,7 @@ const translations = {
         name: "Имя", nickname: "Никнейм", gender: "Пол", looking: "Ищу",
         age: "Возраст", range: "Диапазон", bio: "О себе",
         photo: "Фото", photoLoaded: "Загружено ✓",
-        notSpecified: "Не указано",
-        saving: "Сохраняем...", error: "Ошибка сохранения"
+        notSpecified: "Не указано"
     },
     en: {
         chooseLang: "Choose language", chooseLangSub: "Your preferred language",
@@ -91,8 +90,7 @@ const translations = {
         name: "Name", nickname: "Nickname", gender: "Gender", looking: "Looking for",
         age: "Age", range: "Range", bio: "About",
         photo: "Photo", photoLoaded: "Uploaded ✓",
-        notSpecified: "Not specified",
-        saving: "Saving...", error: "Save error"
+        notSpecified: "Not specified"
     },
     ua: {
         chooseLang: "Обери мову", chooseLangSub: "Зручна тобі мова",
@@ -119,8 +117,7 @@ const translations = {
         name: "Ім'я", nickname: "Нікнейм", gender: "Стать", looking: "Шукаю",
         age: "Вік", range: "Діапазон", bio: "Про себе",
         photo: "Фото", photoLoaded: "Завантажено ✓",
-        notSpecified: "Не вказано",
-        saving: "Зберігаємо...", error: "Помилка збереження"
+        notSpecified: "Не вказано"
     },
     sr: {
         chooseLang: "Izaberi jezik", chooseLangSub: "Jezik koji ti odgovara",
@@ -147,8 +144,7 @@ const translations = {
         name: "Ime", nickname: "Nadimak", gender: "Pol", looking: "Tražim",
         age: "Godine", range: "Opseg", bio: "O sebi",
         photo: "Fotografija", photoLoaded: "Otpremljeno ✓",
-        notSpecified: "Nije navedeno",
-        saving: "Čuvamo...", error: "Greška"
+        notSpecified: "Nije navedeno"
     },
     kz: {
         chooseLang: "Тілді таңда", chooseLangSub: "Өзіңе ыңғайлы тіл",
@@ -175,8 +171,7 @@ const translations = {
         name: "Аты", nickname: "Лақап ат", gender: "Жынысы", looking: "Іздеймін",
         age: "Жасы", range: "Диапазон", bio: "Өзі туралы",
         photo: "Фотосурет", photoLoaded: "Жүктелді ✓",
-        notSpecified: "Көрсетілмеген",
-        saving: "Сақтап жатырмыз...", error: "Сақтау қатесі"
+        notSpecified: "Көрсетілмеген"
     }
 };
 
@@ -297,7 +292,6 @@ function skipPhoto() {
 async function finishOnboarding() {
     console.log("📦 Данные пользователя:", userData);
 
-    // 📤 Отправка на backend
     try {
         const response = await fetch(API_URL + "/api/register", {
             method: "POST",
@@ -322,7 +316,6 @@ async function finishOnboarding() {
         console.error("❌ Ошибка отправки на сервер:", e);
     }
 
-    // Показ результата
     const genderText = { male: t("male"), female: t("female"), any: t("any") };
     const resultBox = document.getElementById("result");
     if (resultBox) {
@@ -337,7 +330,6 @@ async function finishOnboarding() {
             (userData.photo ? "<p><span>📸 " + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
     }
 
-    // 💾 Сохраняем локально
     try {
         localStorage.setItem("emberUser", JSON.stringify(userData));
         localStorage.setItem("emberRegistered", "true");
