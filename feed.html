@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ember — Лента</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .feed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 20px;
+            background: linear-gradient(180deg, rgba(10,10,10,0.95), transparent);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .feed-title {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .feed-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .cards-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            bottom: 100px;
+            background: var(--card);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+        }
+        
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9), transparent);
+            color: #fff;
+        }
+        
+        .card-name {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .card-age {
+            font-size: 22px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 400;
+        }
+        
+        .card-bio {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        
+        .actions {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 10;
+        }
+        
+        .action-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        
+        .action-btn:hover { transform: scale(1.1); }
+        .action-btn:active { transform: scale(0.95); }
+        
+        .btn-dislike {
+            background: var(--card);
+            color: #fff;
+            border: 2px solid var(--border);
+        }
+        
+        .btn-superlike {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: #fff;
+        }
+        
+        .btn-like {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(217, 56, 94, 0.5);
+        }
+        
+        /* Свайп анимация */
+        .card.swipe-left {
+            transform: translateX(-150%) rotate(-30deg);
+            opacity: 0;
+        }
+        
+        .card.swipe-right {
+            transform: translateX(150%) rotate(30deg);
+            opacity: 0;
+        }
+        
+        .empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--muted);
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="feed-header">
+        <div class="feed-title">Лента</div>
+        <div class="feed-menu">⋮</div>
+    </div>
+
+    <div class="cards-container" id="cards"></div>
+
+    <div class="actions">
+        <button class="action-btn btn-dislike" onclick="swipe('left')">✕</button>
+        <button class="action-btn btn-superlike" onclick="superlike()">★</button>
+        <button class="action-btn btn-like" onclick="swipe('right')">♥</button>
+    </div>
+
+    <script>
+        // 👤 Тестовые анкеты (потом заменишь на данные из базы)
+        const profiles = [
+            { name: "Аня", age: 22, bio: "Люблю кофе и путешествия ☕✈️", photo: "images/girl.png" },
+            { name: "Максим", age: 26, bio: "Программист. В свободное время — вейксёрф.", photo: "images/girl.png" },
+            { name: "Лиза", age: 21, bio: "Дизайнер. Обожаю котов 🐱", photo: "images/girl.png" },
+            { name: "Дима", age: 28, bio: "Спорт, музыка, книги.", photo: "images/girl.png" }
+        ];
+        
+        let currentIndex = 0;
+        
+        function renderCard() {
+            const container = document.getElementById("cards");
+            container.innerHTML = "";
+            
+            if (currentIndex >= profiles.length) {
+                container.innerHTML = '<div class="empty">Анкеты закончились!<br>Заходи позже 🔥</div>';
+                return;
+            }
+            
+            const profile = profiles[currentIndex];
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <img src="${profile.photo}" alt="${profile.name}">
+                <div class="card-info">
+                    <div class="card-name">${profile.name}, <span class="card-age">${profile.age}</span></div>
+                    <div class="card-bio">${profile.bio}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+        
+        function swipe(direction) {
+            const card = document.querySelector(".card");
+            if (!card) return;
+            
+            if (navigator.vibrate) navigator.vibrate(20);
+            
+            card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
+            
+            // Логика: сохранить лайк/дизлайк
+            console.log(direction === "right" ? "❤️ Лайк" : "❌ Дизлайк", profiles[currentIndex]);
+            
+            setTimeout(() => {
+                currentIndex++;
+                renderCard();
+            }, 400);
+        }
+        
+        function superlike() {
+            if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
+            console.log("⭐ Суперлайк", profiles[currentIndex]);
+            swipe("right");
+        }
+        
+        // Поддержка свайпа мышью/пальцем
+        let startX = 0;
+        document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+        document.addEventListener("touchend", e => {
+            const diff = e.changedTouches[0].clientX - startX;
+            if (diff > 80) swipe("right");
+            if (diff < -80) swipe("left");
+        });
+        
+        renderCard();
+    </script>
+</body>
+</html>
