@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="theme-color" content="#0a0618">
     <title>Ember — Знакомства</title>
     <link rel="icon" href="images/logo.png" type="image/png">
     <link rel="stylesheet" href="style.css">
@@ -40,6 +40,9 @@
                 </button>
                 <button class="lang-btn" data-lang="sr">
                     <img src="images/flags/sr.svg" alt="SR" class="flag-img"> Srpski
+                </button>
+                <button class="lang-btn" data-lang="kz">
+                    <img src="images/flags/kz.svg" alt="KZ" class="flag-img"> Қазақша
                 </button>
             </div>
 
@@ -155,12 +158,44 @@
 
             <div class="btn-row">
                 <button class="btn-back" onclick="prevScreen()">←</button>
-                <button class="btn-next" onclick="finishOnboarding()" data-i18n="next">Далее</button>
+                <button class="btn-next" onclick="goToPhoto()" data-i18n="next">Далее</button>
             </div>
-            <button class="btn-skip" onclick="finishOnboarding()" data-i18n="skip">Пропустить</button>
+            <button class="btn-skip" onclick="goToPhoto()" data-i18n="skip">Пропустить</button>
         </div>
 
-        <!-- ЭКРАН 6: Готово -->
+        <!-- ЭКРАН 6: Фото -->
+        <div class="screen" id="screen-photo">
+            <div class="avatar-wrapper">
+                <img src="images/girl.png" alt="Ember" class="avatar">
+            </div>
+            <h1 data-i18n="photoTitle">Как ты выглядишь?</h1>
+            <p class="subtitle" data-i18n="photoSub">Добавь своё фото</p>
+
+            <label data-i18n="photoLabel">Твоё фото</label>
+            <div class="photo-upload">
+                <label for="photoInput" class="photo-box">
+                    <img id="photoPreview" class="photo-preview" style="display:none;" alt="preview">
+                    <div id="photoPlaceholder" class="photo-placeholder">
+                        <span class="photo-plus">+</span>
+                        <span data-i18n="photoAdd">Добавить</span>
+                    </div>
+                </label>
+                <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(event)" style="display:none;">
+            </div>
+
+            <div class="hint-box">
+                <span class="hint-icon">📸</span>
+                <span data-i18n="photoHint">Анкеты с фото получают в 10 раз больше лайков</span>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="finishOnboarding()" data-i18n="next">Далее</button>
+            </div>
+            <button class="btn-skip" onclick="skipPhoto()" data-i18n="skip">Пропустить</button>
+        </div>
+
+        <!-- ЭКРАН 7: Готово -->
         <div class="screen" id="screen-done">
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
