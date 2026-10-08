@@ -2,7 +2,6 @@ let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
 
-// URL твоего backend на Render
 const API_URL = "https://backend-2tcl.onrender.com";
 
 // Проверка: зарегистрирован ли пользователь
@@ -17,7 +16,6 @@ function isRegistered() {
     }
 }
 
-// Если уже зарегистрирован — сразу в ленту
 if (isRegistered()) {
     window.location.href = "feed.html";
 }
@@ -26,14 +24,30 @@ if (isRegistered()) {
 function getTelegramId() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
-        if (user) return String(user.id);
+        if (user) {
+            console.log("✅ Telegram ID:", user.id);
+            return String(user.id);
+        }
     }
     let id = localStorage.getItem("emberTgId");
     if (!id) {
         id = "test_" + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("emberTgId", id);
     }
+    console.log("⚠️ Fallback ID:", id);
     return id;
+}
+
+// Получить Telegram username (@username)
+function getTelegramUsername() {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user && user.username) {
+            console.log("✅ Telegram username:", user.username);
+            return user.username;
+        }
+    }
+    return null;
 }
 
 // ПЕРЕВОДЫ
@@ -259,7 +273,6 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
-// Загрузка фото
 function handlePhoto(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -288,16 +301,21 @@ function skipPhoto() {
     finishOnboarding();
 }
 
-// ФИНАЛ — отправка на сервер
 async function finishOnboarding() {
-    console.log("Данные пользователя:", userData);
+    const tgId = getTelegramId();
+    const tgUsername = getTelegramUsername();
+
+    console.log("📦 Данные:", userData);
+    console.log("🆔 Telegram ID:", tgId);
+    console.log("📛 Telegram username:", tgUsername);
 
     try {
         const response = await fetch(API_URL + "/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                telegram_id: getTelegramId(),
+                telegram_id: tgId,
+                username: tgUsername,
                 name: userData.name,
                 nickname: userData.nickname || null,
                 age: parseInt(userData.age),
@@ -311,9 +329,9 @@ async function finishOnboarding() {
             })
         });
         const result = await response.json();
-        console.log("Сохранено в БД:", result);
+        console.log("✅ Сохранено в БД:", result);
     } catch (e) {
-        console.error("Ошибка отправки на сервер:", e);
+        console.error("❌ Ошибка отправки:", e);
     }
 
     const genderText = { male: t("male"), female: t("female"), any: t("any") };
