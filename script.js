@@ -1,5 +1,5 @@
 let currentScreen = 0;
-const screens = ["language", "name", "gender", "age", "bio", "done"];
+const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
 
 // 🔑 Проверка: зарегистрирован ли пользователь
@@ -51,6 +51,11 @@ const translations = {
         bioLabel: "Описание",
         bioPlaceholder: "Люблю кофе, фильмы и долгие прогулки...",
         bioHint: "Пользователи с интересным описанием получают на 25% больше лайков",
+        photoTitle: "Как ты выглядишь?",
+        photoSub: "Добавь своё фото",
+        photoLabel: "Твоё фото",
+        photoAdd: "Добавить",
+        photoHint: "Анкеты с фото получают в 10 раз больше лайков",
         skip: "Пропустить",
         done: "Готово! 🎉",
         doneSub: "Твоя анкета создана",
@@ -62,6 +67,8 @@ const translations = {
         age: "Возраст",
         range: "Диапазон",
         bio: "О себе",
+        photo: "Фото",
+        photoLoaded: "Загружено ✓",
         notSpecified: "Не указано"
     },
     en: {
@@ -94,6 +101,11 @@ const translations = {
         bioLabel: "Description",
         bioPlaceholder: "I love coffee, movies and long walks...",
         bioHint: "Users with interesting descriptions get 25% more likes",
+        photoTitle: "How do you look?",
+        photoSub: "Add your photo",
+        photoLabel: "Your photo",
+        photoAdd: "Add",
+        photoHint: "Profiles with photos get 10x more likes",
         skip: "Skip",
         done: "Done! 🎉",
         doneSub: "Your profile is created",
@@ -105,6 +117,8 @@ const translations = {
         age: "Age",
         range: "Range",
         bio: "About",
+        photo: "Photo",
+        photoLoaded: "Uploaded ✓",
         notSpecified: "Not specified"
     },
     ua: {
@@ -137,6 +151,11 @@ const translations = {
         bioLabel: "Опис",
         bioPlaceholder: "Люблю каву, фільми та довгі прогулянки...",
         bioHint: "Користувачі з цікавим описом отримують на 25% більше лайків",
+        photoTitle: "Як ти виглядаєш?",
+        photoSub: "Додай своє фото",
+        photoLabel: "Твоє фото",
+        photoAdd: "Додати",
+        photoHint: "Анкети з фото отримують у 10 разів більше лайків",
         skip: "Пропустити",
         done: "Готово! 🎉",
         doneSub: "Твій профіль створено",
@@ -148,6 +167,8 @@ const translations = {
         age: "Вік",
         range: "Діапазон",
         bio: "Про себе",
+        photo: "Фото",
+        photoLoaded: "Завантажено ✓",
         notSpecified: "Не вказано"
     },
     sr: {
@@ -180,6 +201,11 @@ const translations = {
         bioLabel: "Opis",
         bioPlaceholder: "Volim kafu, filmove i duge šetnje...",
         bioHint: "Korisnici sa zanimljivim opisom dobijaju 25% više lajkova",
+        photoTitle: "Kako izgledaš?",
+        photoSub: "Dodaj svoju fotografiju",
+        photoLabel: "Tvoja fotografija",
+        photoAdd: "Dodaj",
+        photoHint: "Profili sa fotografijama dobijaju 10x više lajkova",
         skip: "Preskoči",
         done: "Gotovo! 🎉",
         doneSub: "Tvoj profil je kreiran",
@@ -191,7 +217,59 @@ const translations = {
         age: "Godine",
         range: "Opseg",
         bio: "O sebi",
+        photo: "Fotografija",
+        photoLoaded: "Otpremljeno ✓",
         notSpecified: "Nije navedeno"
+    },
+    kz: {
+        chooseLang: "Тілді таңда",
+        chooseLangSub: "Өзіңе ыңғайлы тіл",
+        next: "Келесі",
+        back: "Артқа",
+        nameTitle: "Танысайық?",
+        nameSub: "Атыңнан бастайық",
+        nameLabel: "Атың",
+        namePlaceholder: "2-ден 32 таңбаға дейін",
+        nickLabel: "Лақап ат",
+        nickPlaceholder: "@Emberanon_bot",
+        nickHint: "Міндетті емес — көрсетпеуге болады",
+        genderTitle: "Сен кімсің?",
+        genderSub: "Және кімді іздейміз",
+        myGenderLabel: "Мен",
+        lookingLabel: "Іздеймін",
+        male: "Жігіт",
+        female: "Қыз",
+        males: "Жігіттерді",
+        females: "Қыздарды",
+        any: "Бәрібір",
+        ageTitle: "Неше жастасың?",
+        ageSub: "Және қандай жаста іздеймін",
+        myAge: "Сенің жасың",
+        ageRange: "Іздеу шегі",
+        bioTitle: "Өзің туралы айт",
+        bioSub: "Бұл жұп табуға көмектеседі",
+        bioLabel: "Сипаттама",
+        bioPlaceholder: "Кофе, фильмдер және ұзақ серуендерді жақсы көремін...",
+        bioHint: "Қызықты сипаттамасы бар қолданушылар 25% көп лайк алады",
+        photoTitle: "Сен қалай көрінесің?",
+        photoSub: "Фотосуретіңді қос",
+        photoLabel: "Сенің фотосуретің",
+        photoAdd: "Қосу",
+        photoHint: "Фотосуреті бар профильдер 10 есе көп лайк алады",
+        skip: "Өткізіп жіберу",
+        done: "Дайын! 🎉",
+        doneSub: "Сенің профилің жасалды",
+        restart: "Қайта бастау",
+        name: "Аты",
+        nickname: "Лақап ат",
+        gender: "Жынысы",
+        looking: "Іздеймін",
+        age: "Жасы",
+        range: "Диапазон",
+        bio: "Өзі туралы",
+        photo: "Фотосурет",
+        photoLoaded: "Жүктелді ✓",
+        notSpecified: "Көрсетілмеген"
     }
 };
 
@@ -199,6 +277,7 @@ function t(key) {
     return (translations[userData.language] && translations[userData.language][key]) || translations.ru[key] || key;
 }
 
+// 🌍 Применить язык ко всем элементам с data-i18n
 function applyLanguage() {
     document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -234,6 +313,7 @@ function shake(el) {
 }
 
 function nextScreen() {
+    // Валидация имени
     if (screens[currentScreen] === "name") {
         const nameInput = document.getElementById("input-name");
         const name = nameInput.value.trim();
@@ -246,28 +326,39 @@ function nextScreen() {
         userData.nickname = document.getElementById("input-nickname").value.trim();
     }
 
+    // Валидация пола
     if (screens[currentScreen] === "gender") {
         const myGender = document.querySelector("[data-group='my-gender'] .choice.selected");
         const lookingFor = document.querySelector("[data-group='looking-for'] .choice.selected");
-        if (!myGender) { shake(document.querySelector("[data-group='my-gender']")); return; }
-        if (!lookingFor) { shake(document.querySelector("[data-group='looking-for']")); return; }
+        if (!myGender) {
+            shake(document.querySelector("[data-group='my-gender']"));
+            return;
+        }
+        if (!lookingFor) {
+            shake(document.querySelector("[data-group='looking-for']"));
+            return;
+        }
         userData.myGender = myGender.dataset.value;
         userData.lookingFor = lookingFor.dataset.value;
     }
 
+    // Возраст
     if (screens[currentScreen] === "age") {
         userData.age = document.getElementById("my-age-value").innerText;
         userData.minAge = document.getElementById("min-age-value").innerText;
         userData.maxAge = document.getElementById("max-age-value").innerText;
     }
 
-    if (currentScreen < screens.length - 1) showScreen(currentScreen + 1);
+    if (currentScreen < screens.length - 1) {
+        showScreen(currentScreen + 1);
+    }
 }
 
 function prevScreen() {
     if (currentScreen > 0) showScreen(currentScreen - 1);
 }
 
+// 🌍 Выбор языка
 document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
@@ -278,6 +369,7 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
     });
 });
 
+// Выбор карточки (пол)
 function selectChoice(el) {
     const group = el.closest(".choice-group");
     if (!group) return;
@@ -286,8 +378,44 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
-function finishOnboarding() {
+// 📸 Загрузка фото
+function handlePhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Файл слишком большой (макс 5 МБ)");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        userData.photo = e.target.result; // base64
+        const preview = document.getElementById("photoPreview");
+        const placeholder = document.getElementById("photoPlaceholder");
+        if (preview) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        }
+        if (placeholder) placeholder.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+}
+
+// 📸 Переход на экран фото (с сохранением bio)
+function goToPhoto() {
     userData.bio = document.getElementById("input-bio").value.trim();
+    showScreen(5); // экран photo
+}
+
+// 📸 Пропустить фото
+function skipPhoto() {
+    userData.photo = null;
+    finishOnboarding();
+}
+
+// Финал — показ данных
+function finishOnboarding() {
     console.log("📦 Данные пользователя:", userData);
 
     const genderText = {
@@ -305,10 +433,11 @@ function finishOnboarding() {
             "<p><span>💕 " + t("looking") + "</span> <strong>" + (genderText[userData.lookingFor] || "—") + "</strong></p>" +
             "<p><span>🎂 " + t("age") + "</span> <strong>" + (userData.age || "—") + "</strong></p>" +
             "<p><span>🔍 " + t("range") + "</span> <strong>" + userData.minAge + "–" + userData.maxAge + "</strong></p>" +
-            "<p><span>📝 " + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>";
+            "<p><span>📝 " + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>" +
+            (userData.photo ? "<p><span>📸 " + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
     }
 
-    // 💾 СОХРАНЯЕМ, ЧТОБЫ БОЛЬШЕ НЕ ПРОХОДИТЬ РЕГИСТРАЦИЮ
+    // 💾 Сохраняем, чтобы больше не проходить регистрацию
     try {
         localStorage.setItem("emberUser", JSON.stringify(userData));
         localStorage.setItem("emberRegistered", "true");
@@ -316,11 +445,10 @@ function finishOnboarding() {
         console.warn("localStorage недоступен", e);
     }
 
-    showScreen(5);
+    showScreen(6); // экран done
 }
 
-// ⚠️ Сбросить регистрацию (для теста) — вызывается вручную из консоли:
-// resetRegistration()
+// ⚠️ Сброс регистрации (вызов из консоли: resetRegistration())
 function resetRegistration() {
     localStorage.removeItem("emberUser");
     localStorage.removeItem("emberRegistered");
@@ -328,7 +456,6 @@ function resetRegistration() {
 }
 
 function restart() {
-    // Сбрасываем только сессию, но НЕ удаляем данные
     localStorage.removeItem("emberUser");
     localStorage.removeItem("emberRegistered");
     location.reload();
