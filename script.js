@@ -2,6 +2,9 @@ let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
 
+// 🌐 URL твоего backend на Render — ЗАМЕНИ на свой!
+const API_URL = "https://ember-backend.onrender.com";
+
 // 🔑 Проверка: зарегистрирован ли пользователь
 function isRegistered() {
     try {
@@ -19,257 +22,161 @@ if (isRegistered()) {
     window.location.href = "feed.html";
 }
 
+// 🔑 Получить Telegram ID
+function getTelegramId() {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user) return String(user.id);
+    }
+    let id = localStorage.getItem("emberTgId");
+    if (!id) {
+        id = "test_" + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem("emberTgId", id);
+    }
+    return id;
+}
+
 // 🌍 ПЕРЕВОДЫ
 const translations = {
     ru: {
-        chooseLang: "Выбери язык",
-        chooseLangSub: "Удобный тебе язык",
-        next: "Далее",
-        back: "Назад",
-        nameTitle: "Познакомимся?",
-        nameSub: "Начнем с твоего имени",
-        nameLabel: "Имя",
-        namePlaceholder: "От 2 до 32 символов",
-        nickLabel: "Никнейм",
-        nickPlaceholder: "@Emberanon_bot",
+        chooseLang: "Выбери язык", chooseLangSub: "Удобный тебе язык",
+        next: "Далее", back: "Назад",
+        nameTitle: "Познакомимся?", nameSub: "Начнем с твоего имени",
+        nameLabel: "Имя", namePlaceholder: "От 2 до 32 символов",
+        nickLabel: "Никнейм", nickPlaceholder: "@Emberanon_bot",
         nickHint: "Необязательно — можно не указывать",
-        genderTitle: "Кто ты?",
-        genderSub: "И кого мы будем искать",
-        myGenderLabel: "Я",
-        lookingLabel: "Хочу искать",
-        male: "Парень",
-        female: "Девушка",
-        males: "Парней",
-        females: "Девушек",
-        any: "Без разницы",
-        ageTitle: "Сколько тебе лет?",
-        ageSub: "И в каком возрасте искать",
-        myAge: "Твой возраст",
-        ageRange: "Рамки поиска",
-        bioTitle: "Расскажи о себе",
-        bioSub: "Это поможет найти тебе пару",
-        bioLabel: "Описание",
-        bioPlaceholder: "Люблю кофе, фильмы и долгие прогулки...",
+        genderTitle: "Кто ты?", genderSub: "И кого мы будем искать",
+        myGenderLabel: "Я", lookingLabel: "Хочу искать",
+        male: "Парень", female: "Девушка",
+        males: "Парней", females: "Девушек", any: "Без разницы",
+        ageTitle: "Сколько тебе лет?", ageSub: "И в каком возрасте искать",
+        myAge: "Твой возраст", ageRange: "Рамки поиска",
+        bioTitle: "Расскажи о себе", bioSub: "Это поможет найти тебе пару",
+        bioLabel: "Описание", bioPlaceholder: "Люблю кофе, фильмы и долгие прогулки...",
         bioHint: "Пользователи с интересным описанием получают на 25% больше лайков",
-        photoTitle: "Как ты выглядишь?",
-        photoSub: "Добавь своё фото",
-        photoLabel: "Твоё фото",
-        photoAdd: "Добавить",
+        photoTitle: "Как ты выглядишь?", photoSub: "Добавь своё фото",
+        photoLabel: "Твоё фото", photoAdd: "Добавить",
         photoHint: "Анкеты с фото получают в 10 раз больше лайков",
         skip: "Пропустить",
-        done: "Готово! 🎉",
-        doneSub: "Твоя анкета создана",
+        done: "Готово! 🎉", doneSub: "Твоя анкета создана",
         restart: "Начать заново",
-        name: "Имя",
-        nickname: "Никнейм",
-        gender: "Пол",
-        looking: "Ищу",
-        age: "Возраст",
-        range: "Диапазон",
-        bio: "О себе",
-        photo: "Фото",
-        photoLoaded: "Загружено ✓",
-        notSpecified: "Не указано"
+        name: "Имя", nickname: "Никнейм", gender: "Пол", looking: "Ищу",
+        age: "Возраст", range: "Диапазон", bio: "О себе",
+        photo: "Фото", photoLoaded: "Загружено ✓",
+        notSpecified: "Не указано",
+        saving: "Сохраняем...", error: "Ошибка сохранения"
     },
     en: {
-        chooseLang: "Choose language",
-        chooseLangSub: "Your preferred language",
-        next: "Next",
-        back: "Back",
-        nameTitle: "Let's get acquainted?",
-        nameSub: "Start with your name",
-        nameLabel: "Name",
-        namePlaceholder: "2 to 32 characters",
-        nickLabel: "Nickname",
-        nickPlaceholder: "@Emberanon_bot",
+        chooseLang: "Choose language", chooseLangSub: "Your preferred language",
+        next: "Next", back: "Back",
+        nameTitle: "Let's get acquainted?", nameSub: "Start with your name",
+        nameLabel: "Name", namePlaceholder: "2 to 32 characters",
+        nickLabel: "Nickname", nickPlaceholder: "@Emberanon_bot",
         nickHint: "Optional — can be left blank",
-        genderTitle: "Who are you?",
-        genderSub: "And who we will look for",
-        myGenderLabel: "I am",
-        lookingLabel: "Looking for",
-        male: "Man",
-        female: "Woman",
-        males: "Men",
-        females: "Women",
-        any: "Anyone",
-        ageTitle: "How old are you?",
-        ageSub: "And what age to search",
-        myAge: "Your age",
-        ageRange: "Search range",
-        bioTitle: "Tell about yourself",
-        bioSub: "This will help find your match",
-        bioLabel: "Description",
-        bioPlaceholder: "I love coffee, movies and long walks...",
+        genderTitle: "Who are you?", genderSub: "And who we will look for",
+        myGenderLabel: "I am", lookingLabel: "Looking for",
+        male: "Man", female: "Woman",
+        males: "Men", females: "Women", any: "Anyone",
+        ageTitle: "How old are you?", ageSub: "And what age to search",
+        myAge: "Your age", ageRange: "Search range",
+        bioTitle: "Tell about yourself", bioSub: "This will help find your match",
+        bioLabel: "Description", bioPlaceholder: "I love coffee, movies and long walks...",
         bioHint: "Users with interesting descriptions get 25% more likes",
-        photoTitle: "How do you look?",
-        photoSub: "Add your photo",
-        photoLabel: "Your photo",
-        photoAdd: "Add",
+        photoTitle: "How do you look?", photoSub: "Add your photo",
+        photoLabel: "Your photo", photoAdd: "Add",
         photoHint: "Profiles with photos get 10x more likes",
         skip: "Skip",
-        done: "Done! 🎉",
-        doneSub: "Your profile is created",
+        done: "Done! 🎉", doneSub: "Your profile is created",
         restart: "Start over",
-        name: "Name",
-        nickname: "Nickname",
-        gender: "Gender",
-        looking: "Looking for",
-        age: "Age",
-        range: "Range",
-        bio: "About",
-        photo: "Photo",
-        photoLoaded: "Uploaded ✓",
-        notSpecified: "Not specified"
+        name: "Name", nickname: "Nickname", gender: "Gender", looking: "Looking for",
+        age: "Age", range: "Range", bio: "About",
+        photo: "Photo", photoLoaded: "Uploaded ✓",
+        notSpecified: "Not specified",
+        saving: "Saving...", error: "Save error"
     },
     ua: {
-        chooseLang: "Обери мову",
-        chooseLangSub: "Зручна тобі мова",
-        next: "Далі",
-        back: "Назад",
-        nameTitle: "Познайомимось?",
-        nameSub: "Почнемо з твого імені",
-        nameLabel: "Ім'я",
-        namePlaceholder: "Від 2 до 32 символів",
-        nickLabel: "Нікнейм",
-        nickPlaceholder: "@Emberanon_bot",
+        chooseLang: "Обери мову", chooseLangSub: "Зручна тобі мова",
+        next: "Далі", back: "Назад",
+        nameTitle: "Познайомимось?", nameSub: "Почнемо з твого імені",
+        nameLabel: "Ім'я", namePlaceholder: "Від 2 до 32 символів",
+        nickLabel: "Нікнейм", nickPlaceholder: "@Emberanon_bot",
         nickHint: "Необов'язково — можна не вказувати",
-        genderTitle: "Хто ти?",
-        genderSub: "І кого ми будемо шукати",
-        myGenderLabel: "Я",
-        lookingLabel: "Хочу шукати",
-        male: "Хлопець",
-        female: "Дівчина",
-        males: "Хлопців",
-        females: "Дівчат",
-        any: "Без різниці",
-        ageTitle: "Скільки тобі років?",
-        ageSub: "І в якому віці шукати",
-        myAge: "Твій вік",
-        ageRange: "Рамки пошуку",
-        bioTitle: "Розкажи про себе",
-        bioSub: "Це допоможе знайти тобі пару",
-        bioLabel: "Опис",
-        bioPlaceholder: "Люблю каву, фільми та довгі прогулянки...",
+        genderTitle: "Хто ти?", genderSub: "І кого ми будемо шукати",
+        myGenderLabel: "Я", lookingLabel: "Хочу шукати",
+        male: "Хлопець", female: "Дівчина",
+        males: "Хлопців", females: "Дівчат", any: "Без різниці",
+        ageTitle: "Скільки тобі років?", ageSub: "І в якому віці шукати",
+        myAge: "Твій вік", ageRange: "Рамки пошуку",
+        bioTitle: "Розкажи про себе", bioSub: "Це допоможе знайти тобі пару",
+        bioLabel: "Опис", bioPlaceholder: "Люблю каву, фільми та довгі прогулянки...",
         bioHint: "Користувачі з цікавим описом отримують на 25% більше лайків",
-        photoTitle: "Як ти виглядаєш?",
-        photoSub: "Додай своє фото",
-        photoLabel: "Твоє фото",
-        photoAdd: "Додати",
+        photoTitle: "Як ти виглядаєш?", photoSub: "Додай своє фото",
+        photoLabel: "Твоє фото", photoAdd: "Додати",
         photoHint: "Анкети з фото отримують у 10 разів більше лайків",
         skip: "Пропустити",
-        done: "Готово! 🎉",
-        doneSub: "Твій профіль створено",
+        done: "Готово! 🎉", doneSub: "Твій профіль створено",
         restart: "Почати знову",
-        name: "Ім'я",
-        nickname: "Нікнейм",
-        gender: "Стать",
-        looking: "Шукаю",
-        age: "Вік",
-        range: "Діапазон",
-        bio: "Про себе",
-        photo: "Фото",
-        photoLoaded: "Завантажено ✓",
-        notSpecified: "Не вказано"
+        name: "Ім'я", nickname: "Нікнейм", gender: "Стать", looking: "Шукаю",
+        age: "Вік", range: "Діапазон", bio: "Про себе",
+        photo: "Фото", photoLoaded: "Завантажено ✓",
+        notSpecified: "Не вказано",
+        saving: "Зберігаємо...", error: "Помилка збереження"
     },
     sr: {
-        chooseLang: "Izaberi jezik",
-        chooseLangSub: "Jezik koji ti odgovara",
-        next: "Dalje",
-        back: "Nazad",
-        nameTitle: "Hajde da se upoznamo?",
-        nameSub: "Počnimo sa tvojim imenom",
-        nameLabel: "Ime",
-        namePlaceholder: "Od 2 do 32 karaktera",
-        nickLabel: "Nadimak",
-        nickPlaceholder: "@Emberanon_bot",
+        chooseLang: "Izaberi jezik", chooseLangSub: "Jezik koji ti odgovara",
+        next: "Dalje", back: "Nazad",
+        nameTitle: "Hajde da se upoznamo?", nameSub: "Počnimo sa tvojim imenom",
+        nameLabel: "Ime", namePlaceholder: "Od 2 do 32 karaktera",
+        nickLabel: "Nadimak", nickPlaceholder: "@Emberanon_bot",
         nickHint: "Opciono — može se izostaviti",
-        genderTitle: "Ko si ti?",
-        genderSub: "I koga ćemo tražiti",
-        myGenderLabel: "Ja sam",
-        lookingLabel: "Tražim",
-        male: "Momak",
-        female: "Devojka",
-        males: "Momke",
-        females: "Devojke",
-        any: "Svejedno",
-        ageTitle: "Koliko imaš godina?",
-        ageSub: "I koje godine da tražim",
-        myAge: "Tvoje godine",
-        ageRange: "Opseg pretrage",
-        bioTitle: "Reci nešto o sebi",
-        bioSub: "Ovo će ti pomoći da nađeš par",
-        bioLabel: "Opis",
-        bioPlaceholder: "Volim kafu, filmove i duge šetnje...",
+        genderTitle: "Ko si ti?", genderSub: "I koga ćemo tražiti",
+        myGenderLabel: "Ja sam", lookingLabel: "Tražim",
+        male: "Momak", female: "Devojka",
+        males: "Momke", females: "Devojke", any: "Svejedno",
+        ageTitle: "Koliko imaš godina?", ageSub: "I koje godine da tražim",
+        myAge: "Tvoje godine", ageRange: "Opseg pretrage",
+        bioTitle: "Reci nešto o sebi", bioSub: "Ovo će ti pomoći da nađeš par",
+        bioLabel: "Opis", bioPlaceholder: "Volim kafu, filmove i duge šetnje...",
         bioHint: "Korisnici sa zanimljivim opisom dobijaju 25% više lajkova",
-        photoTitle: "Kako izgledaš?",
-        photoSub: "Dodaj svoju fotografiju",
-        photoLabel: "Tvoja fotografija",
-        photoAdd: "Dodaj",
+        photoTitle: "Kako izgledaš?", photoSub: "Dodaj svoju fotografiju",
+        photoLabel: "Tvoja fotografija", photoAdd: "Dodaj",
         photoHint: "Profili sa fotografijama dobijaju 10x više lajkova",
         skip: "Preskoči",
-        done: "Gotovo! 🎉",
-        doneSub: "Tvoj profil je kreiran",
+        done: "Gotovo! 🎉", doneSub: "Tvoj profil je kreiran",
         restart: "Počni ispočetka",
-        name: "Ime",
-        nickname: "Nadimak",
-        gender: "Pol",
-        looking: "Tražim",
-        age: "Godine",
-        range: "Opseg",
-        bio: "O sebi",
-        photo: "Fotografija",
-        photoLoaded: "Otpremljeno ✓",
-        notSpecified: "Nije navedeno"
+        name: "Ime", nickname: "Nadimak", gender: "Pol", looking: "Tražim",
+        age: "Godine", range: "Opseg", bio: "O sebi",
+        photo: "Fotografija", photoLoaded: "Otpremljeno ✓",
+        notSpecified: "Nije navedeno",
+        saving: "Čuvamo...", error: "Greška"
     },
     kz: {
-        chooseLang: "Тілді таңда",
-        chooseLangSub: "Өзіңе ыңғайлы тіл",
-        next: "Келесі",
-        back: "Артқа",
-        nameTitle: "Танысайық?",
-        nameSub: "Атыңнан бастайық",
-        nameLabel: "Атың",
-        namePlaceholder: "2-ден 32 таңбаға дейін",
-        nickLabel: "Лақап ат",
-        nickPlaceholder: "@Emberanon_bot",
+        chooseLang: "Тілді таңда", chooseLangSub: "Өзіңе ыңғайлы тіл",
+        next: "Келесі", back: "Артқа",
+        nameTitle: "Танысайық?", nameSub: "Атыңнан бастайық",
+        nameLabel: "Атың", namePlaceholder: "2-ден 32 таңбаға дейін",
+        nickLabel: "Лақап ат", nickPlaceholder: "@Emberanon_bot",
         nickHint: "Міндетті емес — көрсетпеуге болады",
-        genderTitle: "Сен кімсің?",
-        genderSub: "Және кімді іздейміз",
-        myGenderLabel: "Мен",
-        lookingLabel: "Іздеймін",
-        male: "Жігіт",
-        female: "Қыз",
-        males: "Жігіттерді",
-        females: "Қыздарды",
-        any: "Бәрібір",
-        ageTitle: "Неше жастасың?",
-        ageSub: "Және қандай жаста іздеймін",
-        myAge: "Сенің жасың",
-        ageRange: "Іздеу шегі",
-        bioTitle: "Өзің туралы айт",
-        bioSub: "Бұл жұп табуға көмектеседі",
-        bioLabel: "Сипаттама",
-        bioPlaceholder: "Кофе, фильмдер және ұзақ серуендерді жақсы көремін...",
+        genderTitle: "Сен кімсің?", genderSub: "Және кімді іздейміз",
+        myGenderLabel: "Мен", lookingLabel: "Іздеймін",
+        male: "Жігіт", female: "Қыз",
+        males: "Жігіттерді", females: "Қыздарды", any: "Бәрібір",
+        ageTitle: "Неше жастасың?", ageSub: "Және қандай жаста іздеймін",
+        myAge: "Сенің жасың", ageRange: "Іздеу шегі",
+        bioTitle: "Өзің туралы айт", bioSub: "Бұл жұп табуға көмектеседі",
+        bioLabel: "Сипаттама", bioPlaceholder: "Кофе, фильмдер және ұзақ серуендерді жақсы көремін...",
         bioHint: "Қызықты сипаттамасы бар қолданушылар 25% көп лайк алады",
-        photoTitle: "Сен қалай көрінесің?",
-        photoSub: "Фотосуретіңді қос",
-        photoLabel: "Сенің фотосуретің",
-        photoAdd: "Қосу",
+        photoTitle: "Сен қалай көрінесің?", photoSub: "Фотосуретіңді қос",
+        photoLabel: "Сенің фотосуретің", photoAdd: "Қосу",
         photoHint: "Фотосуреті бар профильдер 10 есе көп лайк алады",
         skip: "Өткізіп жіберу",
-        done: "Дайын! 🎉",
-        doneSub: "Сенің профилің жасалды",
+        done: "Дайын! 🎉", doneSub: "Сенің профилің жасалды",
         restart: "Қайта бастау",
-        name: "Аты",
-        nickname: "Лақап ат",
-        gender: "Жынысы",
-        looking: "Іздеймін",
-        age: "Жасы",
-        range: "Диапазон",
-        bio: "Өзі туралы",
-        photo: "Фотосурет",
-        photoLoaded: "Жүктелді ✓",
-        notSpecified: "Көрсетілмеген"
+        name: "Аты", nickname: "Лақап ат", gender: "Жынысы", looking: "Іздеймін",
+        age: "Жасы", range: "Диапазон", bio: "Өзі туралы",
+        photo: "Фотосурет", photoLoaded: "Жүктелді ✓",
+        notSpecified: "Көрсетілмеген",
+        saving: "Сақтап жатырмыз...", error: "Сақтау қатесі"
     }
 };
 
@@ -277,16 +184,12 @@ function t(key) {
     return (translations[userData.language] && translations[userData.language][key]) || translations.ru[key] || key;
 }
 
-// 🌍 Применить язык ко всем элементам с data-i18n
 function applyLanguage() {
     document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
         const attr = el.getAttribute("data-i18n-attr");
-        if (attr) {
-            el.setAttribute(attr, t(key));
-        } else {
-            el.textContent = t(key);
-        }
+        if (attr) el.setAttribute(attr, t(key));
+        else el.textContent = t(key);
     });
 }
 
@@ -313,52 +216,36 @@ function shake(el) {
 }
 
 function nextScreen() {
-    // Валидация имени
     if (screens[currentScreen] === "name") {
         const nameInput = document.getElementById("input-name");
         const name = nameInput.value.trim();
-        if (name.length < 2) {
-            shake(nameInput);
-            nameInput.focus();
-            return;
-        }
+        if (name.length < 2) { shake(nameInput); nameInput.focus(); return; }
         userData.name = name;
         userData.nickname = document.getElementById("input-nickname").value.trim();
     }
 
-    // Валидация пола
     if (screens[currentScreen] === "gender") {
         const myGender = document.querySelector("[data-group='my-gender'] .choice.selected");
         const lookingFor = document.querySelector("[data-group='looking-for'] .choice.selected");
-        if (!myGender) {
-            shake(document.querySelector("[data-group='my-gender']"));
-            return;
-        }
-        if (!lookingFor) {
-            shake(document.querySelector("[data-group='looking-for']"));
-            return;
-        }
+        if (!myGender) { shake(document.querySelector("[data-group='my-gender']")); return; }
+        if (!lookingFor) { shake(document.querySelector("[data-group='looking-for']")); return; }
         userData.myGender = myGender.dataset.value;
         userData.lookingFor = lookingFor.dataset.value;
     }
 
-    // Возраст
     if (screens[currentScreen] === "age") {
         userData.age = document.getElementById("my-age-value").innerText;
         userData.minAge = document.getElementById("min-age-value").innerText;
         userData.maxAge = document.getElementById("max-age-value").innerText;
     }
 
-    if (currentScreen < screens.length - 1) {
-        showScreen(currentScreen + 1);
-    }
+    if (currentScreen < screens.length - 1) showScreen(currentScreen + 1);
 }
 
 function prevScreen() {
     if (currentScreen > 0) showScreen(currentScreen - 1);
 }
 
-// 🌍 Выбор языка
 document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
@@ -369,7 +256,6 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
     });
 });
 
-// Выбор карточки (пол)
 function selectChoice(el) {
     const group = el.closest(".choice-group");
     if (!group) return;
@@ -382,48 +268,62 @@ function selectChoice(el) {
 function handlePhoto(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     if (file.size > 5 * 1024 * 1024) {
         alert("Файл слишком большой (макс 5 МБ)");
         return;
     }
-
     const reader = new FileReader();
     reader.onload = (e) => {
-        userData.photo = e.target.result; // base64
+        userData.photo = e.target.result;
         const preview = document.getElementById("photoPreview");
         const placeholder = document.getElementById("photoPlaceholder");
-        if (preview) {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-        }
+        if (preview) { preview.src = e.target.result; preview.style.display = "block"; }
         if (placeholder) placeholder.style.display = "none";
     };
     reader.readAsDataURL(file);
 }
 
-// 📸 Переход на экран фото (с сохранением bio)
 function goToPhoto() {
     userData.bio = document.getElementById("input-bio").value.trim();
-    showScreen(5); // экран photo
+    showScreen(5);
 }
 
-// 📸 Пропустить фото
 function skipPhoto() {
     userData.photo = null;
     finishOnboarding();
 }
 
-// Финал — показ данных
-function finishOnboarding() {
+// 🎉 ФИНАЛ — отправка на сервер
+async function finishOnboarding() {
     console.log("📦 Данные пользователя:", userData);
 
-    const genderText = {
-        male: t("male"),
-        female: t("female"),
-        any: t("any")
-    };
+    // 📤 Отправка на backend
+    try {
+        const response = await fetch(API_URL + "/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                telegram_id: getTelegramId(),
+                name: userData.name,
+                nickname: userData.nickname || null,
+                age: parseInt(userData.age),
+                gender: userData.myGender,
+                looking_for: userData.lookingFor,
+                min_age: parseInt(userData.minAge),
+                max_age: parseInt(userData.maxAge),
+                bio: userData.bio || null,
+                photo: userData.photo || null,
+                language: userData.language
+            })
+        });
+        const result = await response.json();
+        console.log("✅ Сохранено в БД:", result);
+    } catch (e) {
+        console.error("❌ Ошибка отправки на сервер:", e);
+    }
 
+    // Показ результата
+    const genderText = { male: t("male"), female: t("female"), any: t("any") };
     const resultBox = document.getElementById("result");
     if (resultBox) {
         resultBox.innerHTML =
@@ -437,18 +337,15 @@ function finishOnboarding() {
             (userData.photo ? "<p><span>📸 " + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
     }
 
-    // 💾 Сохраняем, чтобы больше не проходить регистрацию
+    // 💾 Сохраняем локально
     try {
         localStorage.setItem("emberUser", JSON.stringify(userData));
         localStorage.setItem("emberRegistered", "true");
-    } catch (e) {
-        console.warn("localStorage недоступен", e);
-    }
+    } catch (e) { console.warn("localStorage недоступен", e); }
 
-    showScreen(6); // экран done
+    showScreen(6);
 }
 
-// ⚠️ Сброс регистрации (вызов из консоли: resetRegistration())
 function resetRegistration() {
     localStorage.removeItem("emberUser");
     localStorage.removeItem("emberRegistered");
@@ -461,12 +358,10 @@ function restart() {
     location.reload();
 }
 
-// Telegram WebApp
 if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.expand();
 }
 
-// Старт
 showScreen(0);
 applyLanguage();
