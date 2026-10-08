@@ -2,6 +2,23 @@ let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "done"];
 const userData = { language: "ru" };
 
+// 🔑 Проверка: зарегистрирован ли пользователь
+function isRegistered() {
+    try {
+        const saved = localStorage.getItem("emberUser");
+        if (!saved) return false;
+        const data = JSON.parse(saved);
+        return data && data.name && data.myGender && data.lookingFor;
+    } catch (e) {
+        return false;
+    }
+}
+
+// 🚀 Если уже зарегистрирован — сразу в ленту
+if (isRegistered()) {
+    window.location.href = "feed.html";
+}
+
 // 🌍 ПЕРЕВОДЫ
 const translations = {
     ru: {
@@ -182,7 +199,6 @@ function t(key) {
     return (translations[userData.language] && translations[userData.language][key]) || translations.ru[key] || key;
 }
 
-// 🌍 Применить язык ко всем элементам с data-i18n
 function applyLanguage() {
     document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
@@ -218,7 +234,6 @@ function shake(el) {
 }
 
 function nextScreen() {
-    // Валидация имени
     if (screens[currentScreen] === "name") {
         const nameInput = document.getElementById("input-name");
         const name = nameInput.value.trim();
@@ -231,50 +246,38 @@ function nextScreen() {
         userData.nickname = document.getElementById("input-nickname").value.trim();
     }
 
-    // Валидация пола
     if (screens[currentScreen] === "gender") {
         const myGender = document.querySelector("[data-group='my-gender'] .choice.selected");
         const lookingFor = document.querySelector("[data-group='looking-for'] .choice.selected");
-        if (!myGender) {
-            shake(document.querySelector("[data-group='my-gender']"));
-            return;
-        }
-        if (!lookingFor) {
-            shake(document.querySelector("[data-group='looking-for']"));
-            return;
-        }
+        if (!myGender) { shake(document.querySelector("[data-group='my-gender']")); return; }
+        if (!lookingFor) { shake(document.querySelector("[data-group='looking-for']")); return; }
         userData.myGender = myGender.dataset.value;
         userData.lookingFor = lookingFor.dataset.value;
     }
 
-    // Возраст
     if (screens[currentScreen] === "age") {
         userData.age = document.getElementById("my-age-value").innerText;
         userData.minAge = document.getElementById("min-age-value").innerText;
         userData.maxAge = document.getElementById("max-age-value").innerText;
     }
 
-    if (currentScreen < screens.length - 1) {
-        showScreen(currentScreen + 1);
-    }
+    if (currentScreen < screens.length - 1) showScreen(currentScreen + 1);
 }
 
 function prevScreen() {
     if (currentScreen > 0) showScreen(currentScreen - 1);
 }
 
-// 🌍 Выбор языка — применяется сразу
 document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         userData.language = btn.dataset.lang;
-        applyLanguage();  // ← переводим интерфейс
+        applyLanguage();
         if (navigator.vibrate) navigator.vibrate(10);
     });
 });
 
-// Выбор карточки (пол)
 function selectChoice(el) {
     const group = el.closest(".choice-group");
     if (!group) return;
@@ -283,7 +286,6 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
-// Финал — показ данных
 function finishOnboarding() {
     userData.bio = document.getElementById("input-bio").value.trim();
     console.log("📦 Данные пользователя:", userData);
@@ -306,15 +308,29 @@ function finishOnboarding() {
             "<p><span>📝 " + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>";
     }
 
-    // Сохраняем в localStorage (для передачи в feed.html)
+    // 💾 СОХРАНЯЕМ, ЧТОБЫ БОЛЬШЕ НЕ ПРОХОДИТЬ РЕГИСТРАЦИЮ
     try {
         localStorage.setItem("emberUser", JSON.stringify(userData));
-    } catch (e) { console.warn("localStorage недоступен", e); }
+        localStorage.setItem("emberRegistered", "true");
+    } catch (e) {
+        console.warn("localStorage недоступен", e);
+    }
 
     showScreen(5);
 }
 
+// ⚠️ Сбросить регистрацию (для теста) — вызывается вручную из консоли:
+// resetRegistration()
+function resetRegistration() {
+    localStorage.removeItem("emberUser");
+    localStorage.removeItem("emberRegistered");
+    location.reload();
+}
+
 function restart() {
+    // Сбрасываем только сессию, но НЕ удаляем данные
+    localStorage.removeItem("emberUser");
+    localStorage.removeItem("emberRegistered");
     location.reload();
 }
 
