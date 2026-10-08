@@ -1,123 +1,175 @@
-﻿<!DOCTYPE html>
+@'
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
     <title>Ember — Знакомства</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="app">
 
-    <!-- ЭКРАН 1: Выбор языка -->
-    <div class="screen active" id="screen-language">
-        <h1>Выбери язык</h1>
-        <p class="subtitle">Удобный тебе язык</p>
-        
-        <div class="lang-grid">
-            <button class="lang-btn active" data-lang="ru">🇷🇺 Русский</button>
-            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
-            <button class="lang-btn" data-lang="ua">🇺🇦 Українська</button>
-            <button class="lang-btn" data-lang="sr">🇷🇸 Srpski</button>
+        <!-- Прогресс-бар -->
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
-        
-        <button class="btn-next" onclick="nextScreen()">Далее</button>
-    </div>
 
-    <!-- ЭКРАН 2: Имя -->
-    <div class="screen" id="screen-name">
-        <h1>Познакомимся?</h1>
-        <p class="subtitle">Начнем с твоего имени</p>
-        
-        <label>ИМЯ</label>
-        <input type="text" id="input-name" placeholder="От 2 до 32 символов" maxlength="32">
-        
-        <label>НИКНЕЙМ</label>
-        <input type="text" id="input-nickname" placeholder="@ashqua">
-        <p class="hint">Необязательно — можно не указывать</p>
-        
-        <button class="btn-next" onclick="nextScreen()">Далее</button>
-    </div>
-
-    <!-- ЭКРАН 3: Пол -->
-    <div class="screen" id="screen-gender">
-        <h1>Кто ты?</h1>
-        <p class="subtitle">И кого мы будем искать</p>
-        
-        <label>Я</label>
-        <div class="choice-group" data-group="my-gender">
-            <div class="choice" data-value="male" onclick="selectChoice(this)">
-                <span class="icon blue">👤</span> Парень
+        <!-- ЭКРАН 1: Язык -->
+        <div class="screen active" id="screen-language">
+            <div class="logo-wrapper">
+                <img src="logo.svg" alt="Ember" class="logo">
             </div>
-            <div class="choice" data-value="female" onclick="selectChoice(this)">
-                <span class="icon pink">👤</span> Девушка
+            <h1>Выбери язык</h1>
+            <p class="subtitle">Удобный тебе язык</p>
+            
+            <div class="lang-grid">
+                <button class="lang-btn active" data-lang="ru">
+                    <span class="flag">🇷🇺</span> Русский
+                </button>
+                <button class="lang-btn" data-lang="en">
+                    <span class="flag">🇬🇧</span> English
+                </button>
+                <button class="lang-btn" data-lang="ua">
+                    <span class="flag">🇺🇦</span> Українська
+                </button>
+                <button class="lang-btn" data-lang="sr">
+                    <span class="flag">🇷🇸</span> Srpski
+                </button>
             </div>
+            
+            <button class="btn-next" onclick="nextScreen()">Далее</button>
         </div>
-        
-        <label>ХОЧУ ИСКАТЬ</label>
-        <div class="choice-group" data-group="looking-for">
-            <div class="choice" data-value="male" onclick="selectChoice(this)">
-                <span class="icon blue">👤</span> Парней
-            </div>
-            <div class="choice" data-value="female" onclick="selectChoice(this)">
-                <span class="icon pink">👤</span> Девушек
-            </div>
-            <div class="choice" data-value="any" onclick="selectChoice(this)">
-                <span class="icon green">👤</span> Без разницы
+
+        <!-- ЭКРАН 2: Имя -->
+        <div class="screen" id="screen-name">
+            <h1>Познакомимся?</h1>
+            <p class="subtitle">Начнем с твоего имени</p>
+            
+            <label>Имя</label>
+            <input type="text" id="input-name" placeholder="От 2 до 32 символов" maxlength="32" autocomplete="off">
+            
+            <label>Никнейм</label>
+            <input type="text" id="input-nickname" placeholder="@ashqua" autocomplete="off">
+            <p class="hint">Необязательно — можно не указывать</p>
+            
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="nextScreen()">Далее</button>
             </div>
         </div>
-        
-        <button class="btn-next" onclick="nextScreen()">Далее</button>
-    </div>
 
-    <!-- ЭКРАН 4: Возраст -->
-    <div class="screen" id="screen-age">
-        <h1>Кто ты?</h1>
-        <p class="subtitle">И кого мы будем искать</p>
-        
-        <label>ТВОЙ ВОЗРАСТ</label>
-        <div class="slider-row">
-            <span id="my-age-value">18</span>
-            <input type="range" min="18" max="99" value="18" 
-                   oninput="document.getElementById('my-age-value').innerText = this.value">
+        <!-- ЭКРАН 3: Пол -->
+        <div class="screen" id="screen-gender">
+            <h1>Кто ты?</h1>
+            <p class="subtitle">И кого мы будем искать</p>
+            
+            <label>Я</label>
+            <div class="choice-group" data-group="my-gender">
+                <div class="choice" data-value="male" onclick="selectChoice(this)">
+                    <span class="icon blue">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c5.33 0 8 2.67 8 6v2H4v-2c0-3.33 2.67-6 8-6z"/></svg>
+                    </span> Парень
+                </div>
+                <div class="choice" data-value="female" onclick="selectChoice(this)">
+                    <span class="icon pink">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c5.33 0 8 2.67 8 6v2H4v-2c0-3.33 2.67-6 8-6z"/></svg>
+                    </span> Девушка
+                </div>
+            </div>
+            
+            <label>Хочу искать</label>
+            <div class="choice-group" data-group="looking-for">
+                <div class="choice" data-value="male" onclick="selectChoice(this)">
+                    <span class="icon blue">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c5.33 0 8 2.67 8 6v2H4v-2c0-3.33 2.67-6 8-6z"/></svg>
+                    </span> Парней
+                </div>
+                <div class="choice" data-value="female" onclick="selectChoice(this)">
+                    <span class="icon pink">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c5.33 0 8 2.67 8 6v2H4v-2c0-3.33 2.67-6 8-6z"/></svg>
+                    </span> Девушек
+                </div>
+                <div class="choice" data-value="any" onclick="selectChoice(this)">
+                    <span class="icon green">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c5.33 0 8 2.67 8 6v2H4v-2c0-3.33 2.67-6 8-6z"/></svg>
+                    </span> Без разницы
+                </div>
+            </div>
+            
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="nextScreen()">Далее</button>
+            </div>
         </div>
-        
-        <label>РАМКИ В КОТОРЫХ ИЩЕМ</label>
-        <div class="slider-row">
-            <span id="min-age-value">18</span>
-            <input type="range" min="18" max="99" value="18"
-                   oninput="document.getElementById('min-age-value').innerText = this.value">
-            <input type="range" min="18" max="99" value="28"
-                   oninput="document.getElementById('max-age-value').innerText = this.value">
-            <span id="max-age-value">28</span>
+
+        <!-- ЭКРАН 4: Возраст -->
+        <div class="screen" id="screen-age">
+            <h1>Сколько тебе лет?</h1>
+            <p class="subtitle">И в каком возрасте искать</p>
+            
+            <label>Твой возраст</label>
+            <div class="slider-row">
+                <span class="slider-value" id="my-age-value">18</span>
+                <input type="range" min="18" max="99" value="18"
+                       oninput="document.getElementById('my-age-value').innerText = this.value">
+            </div>
+            
+            <label>Рамки поиска</label>
+            <div class="slider-row">
+                <span class="slider-value" id="min-age-value">18</span>
+                <input type="range" min="18" max="99" value="18"
+                       oninput="document.getElementById('min-age-value').innerText = this.value">
+            </div>
+            <div class="slider-row">
+                <span class="slider-value" id="max-age-value">28</span>
+                <input type="range" min="18" max="99" value="28"
+                       oninput="document.getElementById('max-age-value').innerText = this.value">
+            </div>
+            
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="nextScreen()">Далее</button>
+            </div>
         </div>
-        
-        <button class="btn-next" onclick="nextScreen()">Далее</button>
-    </div>
 
-    <!-- ЭКРАН 5: Описание -->
-    <div class="screen" id="screen-bio">
-        <h1>Познакомимся?</h1>
-        <p class="subtitle">Напиши что-то о себе</p>
-        
-        <label>ОПИСАНИЕ</label>
-        <textarea id="input-bio" rows="6" placeholder="Расскажи о себе..."></textarea>
-        
-        <div class="hint-box">
-            💡 Пользователи с интересным описанием получают на 25% больше лайков
+        <!-- ЭКРАН 5: Описание -->
+        <div class="screen" id="screen-bio">
+            <h1>Расскажи о себе</h1>
+            <p class="subtitle">Это поможет найти тебе пару</p>
+            
+            <label>Описание</label>
+            <textarea id="input-bio" rows="6" placeholder="Люблю кофе, фильмы и долгие прогулки..."></textarea>
+            
+            <div class="hint-box">
+                <span class="hint-icon">💡</span>
+                <span>Пользователи с интересным описанием получают <b>на 25% больше лайков</b></span>
+            </div>
+            
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="finishOnboarding()">Далее</button>
+            </div>
+            <button class="btn-skip" onclick="finishOnboarding()">Пропустить</button>
         </div>
-        
-        <button class="btn-next" onclick="finishOnboarding()">Далее</button>
-        <button class="btn-skip" onclick="finishOnboarding()">Пропустить</button>
-    </div>
 
-    <!-- ЭКРАН 6: Готово -->
-    <div class="screen" id="screen-done">
-        <h1>Готово! 🎉</h1>
-        <p class="subtitle">Твоя анкета создана</p>
-        <div id="result" class="result-box"></div>
-        <button class="btn-next" onclick="restart()">Начать заново</button>
-    </div>
+        <!-- ЭКРАН 6: Готово -->
+        <div class="screen" id="screen-done">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="#d9385e" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1>Готово! 🎉</h1>
+            <p class="subtitle">Твоя анкета создана</p>
+            <div id="result" class="result-box"></div>
+            <button class="btn-next" onclick="restart()">Начать заново</button>
+        </div>
 
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
+'@ | Out-File -FilePath index.html -Encoding UTF8
