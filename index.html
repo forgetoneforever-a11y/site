@@ -25,8 +25,8 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Выбери язык</h1>
-            <p class="subtitle">Удобный тебе язык</p>
+            <h1 data-i18n="chooseLang">Выбери язык</h1>
+            <p class="subtitle" data-i18n="chooseLangSub">Удобный тебе язык</p>
 
             <div class="lang-grid">
                 <button class="lang-btn active" data-lang="ru">
@@ -43,7 +43,7 @@
                 </button>
             </div>
 
-            <button class="btn-next" onclick="nextScreen()">Далее</button>
+            <button class="btn-next" onclick="nextScreen()" data-i18n="next">Далее</button>
         </div>
 
         <!-- ЭКРАН 2: Имя -->
@@ -51,19 +51,19 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Познакомимся?</h1>
-            <p class="subtitle">Начнем с твоего имени</p>
+            <h1 data-i18n="nameTitle">Познакомимся?</h1>
+            <p class="subtitle" data-i18n="nameSub">Начнем с твоего имени</p>
 
-            <label>Имя</label>
-            <input type="text" id="input-name" placeholder="От 2 до 32 символов" maxlength="32" autocomplete="off">
+            <label data-i18n="nameLabel">Имя</label>
+            <input type="text" id="input-name" placeholder="От 2 до 32 символов" data-i18n="namePlaceholder" data-i18n-attr="placeholder" maxlength="32" autocomplete="off">
 
-            <label>Никнейм</label>
-            <input type="text" id="input-nickname" placeholder="@ashqua" autocomplete="off">
-            <p class="hint">Необязательно — можно не указывать</p>
+            <label data-i18n="nickLabel">Никнейм</label>
+            <input type="text" id="input-nickname" placeholder="@Emberanon_bot" autocomplete="off">
+            <p class="hint" data-i18n="nickHint">Необязательно — можно не указывать</p>
 
             <div class="btn-row">
                 <button class="btn-back" onclick="prevScreen()">←</button>
-                <button class="btn-next" onclick="nextScreen()">Далее</button>
+                <button class="btn-next" onclick="nextScreen()" data-i18n="next">Далее</button>
             </div>
         </div>
 
@@ -72,35 +72,35 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Кто ты?</h1>
-            <p class="subtitle">И кого мы будем искать</p>
+            <h1 data-i18n="genderTitle">Кто ты?</h1>
+            <p class="subtitle" data-i18n="genderSub">И кого мы будем искать</p>
 
-            <label>Я</label>
+            <label data-i18n="myGenderLabel">Я</label>
             <div class="choice-group" data-group="my-gender">
                 <div class="choice" data-value="male" onclick="selectChoice(this)">
-                    <span class="icon blue">♂</span> Парень
+                    <span class="icon blue">♂</span> <span data-i18n="male">Парень</span>
                 </div>
                 <div class="choice" data-value="female" onclick="selectChoice(this)">
-                    <span class="icon pink">♀</span> Девушка
+                    <span class="icon pink">♀</span> <span data-i18n="female">Девушка</span>
                 </div>
             </div>
 
-            <label>Хочу искать</label>
+            <label data-i18n="lookingLabel">Хочу искать</label>
             <div class="choice-group" data-group="looking-for">
                 <div class="choice" data-value="male" onclick="selectChoice(this)">
-                    <span class="icon blue">♂</span> Парней
+                    <span class="icon blue">♂</span> <span data-i18n="males">Парней</span>
                 </div>
                 <div class="choice" data-value="female" onclick="selectChoice(this)">
-                    <span class="icon pink">♀</span> Девушек
+                    <span class="icon pink">♀</span> <span data-i18n="females">Девушек</span>
                 </div>
                 <div class="choice" data-value="any" onclick="selectChoice(this)">
-                    <span class="icon green">∞</span> Без разницы
+                    <span class="icon green">∞</span> <span data-i18n="any">Без разницы</span>
                 </div>
             </div>
 
             <div class="btn-row">
                 <button class="btn-back" onclick="prevScreen()">←</button>
-                <button class="btn-next" onclick="nextScreen()">Далее</button>
+                <button class="btn-next" onclick="nextScreen()" data-i18n="next">Далее</button>
             </div>
         </div>
 
@@ -109,17 +109,17 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Сколько тебе лет?</h1>
-            <p class="subtitle">И в каком возрасте искать</p>
+            <h1 data-i18n="ageTitle">Сколько тебе лет?</h1>
+            <p class="subtitle" data-i18n="ageSub">И в каком возрасте искать</p>
 
-            <label>Твой возраст</label>
+            <label data-i18n="myAge">Твой возраст</label>
             <div class="slider-row">
                 <span class="slider-value" id="my-age-value">18</span>
                 <input type="range" min="18" max="99" value="18"
                        oninput="document.getElementById('my-age-value').innerText = this.value">
             </div>
 
-            <label>Рамки поиска</label>
+            <label data-i18n="ageRange">Рамки поиска</label>
             <div class="slider-row">
                 <span class="slider-value" id="min-age-value">18</span>
                 <input type="range" min="18" max="99" value="18"
@@ -133,7 +133,7 @@
 
             <div class="btn-row">
                 <button class="btn-back" onclick="prevScreen()">←</button>
-                <button class="btn-next" onclick="nextScreen()">Далее</button>
+                <button class="btn-next" onclick="nextScreen()" data-i18n="next">Далее</button>
             </div>
         </div>
 
@@ -142,22 +142,22 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Расскажи о себе</h1>
-            <p class="subtitle">Это поможет найти тебе пару</p>
+            <h1 data-i18n="bioTitle">Расскажи о себе</h1>
+            <p class="subtitle" data-i18n="bioSub">Это поможет найти тебе пару</p>
 
-            <label>Описание</label>
-            <textarea id="input-bio" rows="6" placeholder="Люблю кофе, фильмы и долгие прогулки..."></textarea>
+            <label data-i18n="bioLabel">Описание</label>
+            <textarea id="input-bio" rows="6" placeholder="Люблю кофе, фильмы и долгие прогулки..." data-i18n="bioPlaceholder" data-i18n-attr="placeholder"></textarea>
 
             <div class="hint-box">
                 <span class="hint-icon">💡</span>
-                <span>Пользователи с интересным описанием получают <b>на 25% больше лайков</b></span>
+                <span data-i18n="bioHint">Пользователи с интересным описанием получают на 25% больше лайков</span>
             </div>
 
             <div class="btn-row">
                 <button class="btn-back" onclick="prevScreen()">←</button>
-                <button class="btn-next" onclick="finishOnboarding()">Далее</button>
+                <button class="btn-next" onclick="finishOnboarding()" data-i18n="next">Далее</button>
             </div>
-            <button class="btn-skip" onclick="finishOnboarding()">Пропустить</button>
+            <button class="btn-skip" onclick="finishOnboarding()" data-i18n="skip">Пропустить</button>
         </div>
 
         <!-- ЭКРАН 6: Готово -->
@@ -165,10 +165,11 @@
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
             </div>
-            <h1>Готово! 🎉</h1>
-            <p class="subtitle">Твоя анкета создана</p>
+            <h1 data-i18n="done">Готово! 🎉</h1>
+            <p class="subtitle" data-i18n="doneSub">Твоя анкета создана</p>
             <div id="result" class="result-box"></div>
-            <button class="btn-next" onclick="restart()">Начать заново</button>
+            <button class="btn-next" onclick="window.location.href='feed.html'">🔥 Начать знакомства</button>
+            <button class="btn-skip" onclick="restart()" data-i18n="restart">Начать заново</button>
         </div>
 
     </div>
