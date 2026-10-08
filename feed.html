@@ -180,7 +180,7 @@
             text-align: center;
             max-width: 360px;
             width: 100%;
-            box-shadow: 
+            box-shadow:
                 0 20px 60px rgba(0,0,0,0.6),
                 0 0 60px rgba(217, 56, 94, 0.4),
                 0 0 100px rgba(123, 47, 255, 0.3);
@@ -306,10 +306,12 @@
 
     <script>
         const API_URL = "https://backend-2tcl.onrender.com";
+        const BOT_USERNAME = "Emberanon_bot"; // без @
 
         let profiles = [];
         let currentIndex = 0;
         let myProfile = null;
+        let lastMatchedUser = null;
 
         function getTelegramId() {
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
@@ -419,7 +421,6 @@
             const profile = profiles[currentIndex];
             const isLike = direction === "right";
 
-            // Отправляем лайк на сервер
             try {
                 const response = await fetch(API_URL + "/api/likes", {
                     method: "POST",
@@ -434,7 +435,9 @@
                 console.log("💾 Лайк сохранён:", result);
 
                 if (result.isMatch && isLike) {
-                    showMatch(result.matchedUser);
+                    lastMatchedUser = result.matchedUser;
+                    // Небольшая задержка, чтобы карточка успела свайпнуться
+                    setTimeout(() => showMatch(result.matchedUser), 400);
                 }
             } catch (e) {
                 console.error("❌ Ошибка лайка:", e);
@@ -464,9 +467,22 @@
             document.getElementById("matchOverlay").classList.remove("active");
         }
 
+        // 💬 Перенаправление в личку бота
         function goToChats() {
-            // Позже сделаем страницу чатов
-            alert("Скоро тут будут чаты! 💬");
+            closeMatch();
+
+            const partnerId = lastMatchedUser ? lastMatchedUser.telegram_id : "";
+            // ?start=chat_<id> — бот получит эту команду
+            const url = "https://t.me/" + BOT_USERNAME + (partnerId ? "?start=chat_" + partnerId : "");
+
+            console.log("🚀 Открываю:", url);
+
+            // В Telegram WebApp используем openTelegramLink
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(url);
+            } else {
+                window.open(url, "_blank");
+            }
         }
 
         function openMenu() {
