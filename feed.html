@@ -147,6 +147,7 @@
             font-size: 16px;
         }
 
+        /* ПОПАП МЭТЧ */
         .match-overlay {
             position: fixed;
             inset: 0;
@@ -265,13 +266,39 @@
         }
 
         .match-btn-secondary:hover { color: #fff; border-color: var(--accent); }
+
+        /* Бейдж непрочитанных */
+        .unread-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            border-radius: 50%;
+            min-width: 20px;
+            height: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 0 5px;
+            box-shadow: 0 2px 8px rgba(217, 56, 94, 0.6);
+        }
+        .unread-badge.active { display: flex; }
     </style>
 </head>
 <body>
 
     <div class="feed-header">
         <div class="feed-title">Лента</div>
-        <div class="feed-menu" onclick="openMenu()">⋮</div>
+        <div style="display:flex; gap:8px; position:relative;">
+            <div class="feed-menu" onclick="window.location.href='chats.html'" title="Чаты" style="position:relative;">
+                💬
+                <div class="unread-badge" id="unreadBadge">0</div>
+            </div>
+            <div class="feed-menu" onclick="openMenu()">⋮</div>
+        </div>
     </div>
 
     <div class="cards-container" id="cards">
@@ -300,7 +327,6 @@
 
     <script>
         const API_URL = "https://backend-2tcl.onrender.com";
-        const BOT_USERNAME = "Emberanon_bot";
 
         let profiles = [];
         let currentIndex = 0;
@@ -459,38 +485,17 @@
             document.getElementById("matchOverlay").classList.remove("active");
         }
 
-        // 💬 Умная кнопка: прямая личка или бот
+        // Переход в чаты — открываем страницу chats.html с собеседником
         function goToChats() {
             closeMatch();
 
             if (!lastMatchedUser) {
-                alert("Не удалось открыть чат");
+                window.location.href = "chats.html";
                 return;
             }
 
-            const partnerUsername = lastMatchedUser.username;
-            const partnerId = lastMatchedUser.telegram_id;
-
-            let url;
-
-            if (partnerUsername) {
-                // Если есть @username — прямая личка
-                const cleanUsername = partnerUsername.replace("@", "");
-                url = "https://t.me/" + cleanUsername;
-                console.log("💬 Прямая личка с @" + cleanUsername);
-            } else {
-                // Иначе — через бота
-                url = "https://t.me/" + BOT_USERNAME + "?start=chat_" + partnerId;
-                console.log("🤖 Чат через бота с ID " + partnerId);
-            }
-
-            console.log("🚀 URL:", url);
-
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(url);
-            } else {
-                window.open(url, "_blank");
-            }
+            // Переходим на chats.html и передаём id собеседника через параметр
+            window.location.href = "chats.html?open=" + lastMatchedUser.telegram_id;
         }
 
         function openMenu() {
@@ -501,6 +506,26 @@
             }
         }
 
+        // Проверка непрочитанных сообщений
+        async function checkUnread() {
+            try {
+                const res = await fetch(API_URL + "/api/messages/unread?telegram_id=" + getTelegramId());
+                const data = await res.json();
+                const total = data.reduce((sum, item) => sum + parseInt(item.count), 0);
+
+                const badge = document.getElementById("unreadBadge");
+                if (total > 0) {
+                    badge.innerText = total > 99 ? "99+" : total;
+                    badge.classList.add("active");
+                } else {
+                    badge.classList.remove("active");
+                }
+            } catch (e) {
+                console.warn("Не удалось получить непрочитанные:", e);
+            }
+        }
+
+        // Свайпы пальцем/мышью
         let startX = 0;
         document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
         document.addEventListener("touchend", e => {
@@ -510,6 +535,10 @@
         });
 
         loadProfiles();
+
+        // Проверяем непрочитанные каждые 10 секунд
+        checkUnread();
+        setInterval(checkUnread, 10000);
     </script>
 </body>
 </html>
