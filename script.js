@@ -2,10 +2,10 @@ let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
 
-// 🌐 URL твоего backend на Render
+// URL твоего backend на Render
 const API_URL = "https://backend-2tcl.onrender.com";
 
-// 🔑 Проверка: зарегистрирован ли пользователь
+// Проверка: зарегистрирован ли пользователь
 function isRegistered() {
     try {
         const saved = localStorage.getItem("emberUser");
@@ -17,12 +17,12 @@ function isRegistered() {
     }
 }
 
-// 🚀 Если уже зарегистрирован — сразу в ленту
+// Если уже зарегистрирован — сразу в ленту
 if (isRegistered()) {
     window.location.href = "feed.html";
 }
 
-// 🔑 Получить Telegram ID
+// Получить Telegram ID
 function getTelegramId() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
@@ -36,7 +36,7 @@ function getTelegramId() {
     return id;
 }
 
-// 🌍 ПЕРЕВОДЫ
+// ПЕРЕВОДЫ
 const translations = {
     ru: {
         chooseLang: "Выбери язык", chooseLangSub: "Удобный тебе язык",
@@ -85,11 +85,11 @@ const translations = {
         photoLabel: "Your photo", photoAdd: "Add",
         photoHint: "Profiles with photos get 10x more likes",
         skip: "Skip",
-        done: "Done! 🎉", doneSub: "Your profile is created",
+        done: "Done!", doneSub: "Your profile is created",
         restart: "Start over",
         name: "Name", nickname: "Nickname", gender: "Gender", looking: "Looking for",
         age: "Age", range: "Range", bio: "About",
-        photo: "Photo", photoLoaded: "Uploaded ✓",
+        photo: "Photo", photoLoaded: "Uploaded",
         notSpecified: "Not specified"
     },
     ua: {
@@ -112,38 +112,38 @@ const translations = {
         photoLabel: "Твоє фото", photoAdd: "Додати",
         photoHint: "Анкети з фото отримують у 10 разів більше лайків",
         skip: "Пропустити",
-        done: "Готово! 🎉", doneSub: "Твій профіль створено",
+        done: "Готово!", doneSub: "Твій профіль створено",
         restart: "Почати знову",
         name: "Ім'я", nickname: "Нікнейм", gender: "Стать", looking: "Шукаю",
         age: "Вік", range: "Діапазон", bio: "Про себе",
-        photo: "Фото", photoLoaded: "Завантажено ✓",
+        photo: "Фото", photoLoaded: "Завантажено",
         notSpecified: "Не вказано"
     },
     sr: {
         chooseLang: "Izaberi jezik", chooseLangSub: "Jezik koji ti odgovara",
         next: "Dalje", back: "Nazad",
-        nameTitle: "Hajde da se upoznamo?", nameSub: "Počnimo sa tvojim imenom",
+        nameTitle: "Hajde da se upoznamo?", nameSub: "Pocnimo sa tvojim imenom",
         nameLabel: "Ime", namePlaceholder: "Od 2 do 32 karaktera",
         nickLabel: "Nadimak", nickPlaceholder: "@Emberanon_bot",
-        nickHint: "Opciono — može se izostaviti",
-        genderTitle: "Ko si ti?", genderSub: "I koga ćemo tražiti",
-        myGenderLabel: "Ja sam", lookingLabel: "Tražim",
+        nickHint: "Opciono — moze se izostaviti",
+        genderTitle: "Ko si ti?", genderSub: "I koga cemo traziti",
+        myGenderLabel: "Ja sam", lookingLabel: "Trazim",
         male: "Momak", female: "Devojka",
         males: "Momke", females: "Devojke", any: "Svejedno",
-        ageTitle: "Koliko imaš godina?", ageSub: "I koje godine da tražim",
+        ageTitle: "Koliko imas godina?", ageSub: "I koje godine da trazim",
         myAge: "Tvoje godine", ageRange: "Opseg pretrage",
-        bioTitle: "Reci nešto o sebi", bioSub: "Ovo će ti pomoći da nađeš par",
-        bioLabel: "Opis", bioPlaceholder: "Volim kafu, filmove i duge šetnje...",
-        bioHint: "Korisnici sa zanimljivim opisom dobijaju 25% više lajkova",
-        photoTitle: "Kako izgledaš?", photoSub: "Dodaj svoju fotografiju",
+        bioTitle: "Reci nesto o sebi", bioSub: "Ovo ce ti pomoci da nadjes par",
+        bioLabel: "Opis", bioPlaceholder: "Volim kafu, filmove i duge setnje...",
+        bioHint: "Korisnici sa zanimljivim opisom dobijaju 25% vise lajkova",
+        photoTitle: "Kako izgledas?", photoSub: "Dodaj svoju fotografiju",
         photoLabel: "Tvoja fotografija", photoAdd: "Dodaj",
-        photoHint: "Profili sa fotografijama dobijaju 10x više lajkova",
-        skip: "Preskoči",
-        done: "Gotovo! 🎉", doneSub: "Tvoj profil je kreiran",
-        restart: "Počni ispočetka",
-        name: "Ime", nickname: "Nadimak", gender: "Pol", looking: "Tražim",
+        photoHint: "Profili sa fotografijama dobijaju 10x vise lajkova",
+        skip: "Preskoci",
+        done: "Gotovo!", doneSub: "Tvoj profil je kreiran",
+        restart: "Pocni ispocetka",
+        name: "Ime", nickname: "Nadimak", gender: "Pol", looking: "Trazim",
         age: "Godine", range: "Opseg", bio: "O sebi",
-        photo: "Fotografija", photoLoaded: "Otpremljeno ✓",
+        photo: "Fotografija", photoLoaded: "Otpremljeno",
         notSpecified: "Nije navedeno"
     },
     kz: {
@@ -166,11 +166,11 @@ const translations = {
         photoLabel: "Сенің фотосуретің", photoAdd: "Қосу",
         photoHint: "Фотосуреті бар профильдер 10 есе көп лайк алады",
         skip: "Өткізіп жіберу",
-        done: "Дайын! 🎉", doneSub: "Сенің профилің жасалды",
+        done: "Дайын!", doneSub: "Сенің профилің жасалды",
         restart: "Қайта бастау",
         name: "Аты", nickname: "Лақап ат", gender: "Жынысы", looking: "Іздеймін",
         age: "Жасы", range: "Диапазон", bio: "Өзі туралы",
-        photo: "Фотосурет", photoLoaded: "Жүктелді ✓",
+        photo: "Фотосурет", photoLoaded: "Жүктелді",
         notSpecified: "Көрсетілмеген"
     }
 };
@@ -259,7 +259,7 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
-// 📸 Загрузка фото
+// Загрузка фото
 function handlePhoto(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -288,9 +288,9 @@ function skipPhoto() {
     finishOnboarding();
 }
 
-// 🎉 ФИНАЛ — отправка на сервер
+// ФИНАЛ — отправка на сервер
 async function finishOnboarding() {
-    console.log("📦 Данные пользователя:", userData);
+    console.log("Данные пользователя:", userData);
 
     try {
         const response = await fetch(API_URL + "/api/register", {
@@ -311,23 +311,23 @@ async function finishOnboarding() {
             })
         });
         const result = await response.json();
-        console.log("✅ Сохранено в БД:", result);
+        console.log("Сохранено в БД:", result);
     } catch (e) {
-        console.error("❌ Ошибка отправки на сервер:", e);
+        console.error("Ошибка отправки на сервер:", e);
     }
 
     const genderText = { male: t("male"), female: t("female"), any: t("any") };
     const resultBox = document.getElementById("result");
     if (resultBox) {
         resultBox.innerHTML =
-            "<p><span>👤 " + t("name") + "</span> <strong>" + (userData.name || "—") + "</strong></p>" +
-            "<p><span>📛 " + t("nickname") + "</span> <strong>" + (userData.nickname || "—") + "</strong></p>" +
-            "<p><span>⚧ " + t("gender") + "</span> <strong>" + (genderText[userData.myGender] || "—") + "</strong></p>" +
-            "<p><span>💕 " + t("looking") + "</span> <strong>" + (genderText[userData.lookingFor] || "—") + "</strong></p>" +
-            "<p><span>🎂 " + t("age") + "</span> <strong>" + (userData.age || "—") + "</strong></p>" +
-            "<p><span>🔍 " + t("range") + "</span> <strong>" + userData.minAge + "–" + userData.maxAge + "</strong></p>" +
-            "<p><span>📝 " + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>" +
-            (userData.photo ? "<p><span>📸 " + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
+            "<p><span>" + t("name") + "</span> <strong>" + (userData.name || "—") + "</strong></p>" +
+            "<p><span>" + t("nickname") + "</span> <strong>" + (userData.nickname || "—") + "</strong></p>" +
+            "<p><span>" + t("gender") + "</span> <strong>" + (genderText[userData.myGender] || "—") + "</strong></p>" +
+            "<p><span>" + t("looking") + "</span> <strong>" + (genderText[userData.lookingFor] || "—") + "</strong></p>" +
+            "<p><span>" + t("age") + "</span> <strong>" + (userData.age || "—") + "</strong></p>" +
+            "<p><span>" + t("range") + "</span> <strong>" + userData.minAge + "–" + userData.maxAge + "</strong></p>" +
+            "<p><span>" + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>" +
+            (userData.photo ? "<p><span>" + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
     }
 
     try {
