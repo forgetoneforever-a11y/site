@@ -161,16 +161,8 @@
             gap: 16px;
         }
 
-        .empty-icon {
-            font-size: 60px;
-            opacity: 0.4;
-        }
-
-        .empty-title {
-            font-size: 20px;
-            color: #fff;
-            font-weight: 600;
-        }
+        .empty-icon { font-size: 60px; opacity: 0.4; }
+        .empty-title { font-size: 20px; color: #fff; font-weight: 600; }
 
         .loading {
             display: flex;
@@ -199,8 +191,8 @@
     </div>
 
     <script>
-        // 🌐 URL твоего backend — ЗАМЕНИ на свой!
-        const API_URL = "https://ember-backend.onrender.com";
+        // 🌐 URL твоего backend
+        const API_URL = "https://backend-2tcl.onrender.com";
 
         let profiles = [];
         let currentIndex = 0;
@@ -223,13 +215,13 @@
         function checkAuth() {
             try {
                 const saved = localStorage.getItem("emberUser");
-                if (!saved) { window.location.href = "index.html"; return false; }
+                if (!saved) { window.location.href = "index.html"; return null; }
                 const user = JSON.parse(saved);
                 console.log("👤 Текущий пользователь:", user);
                 return user;
             } catch (e) {
                 window.location.href = "index.html";
-                return false;
+                return null;
             }
         }
 
@@ -245,13 +237,14 @@
                     min_age: user.minAge || 18,
                     max_age: user.maxAge || 99
                 });
+                console.log("📡 Запрос:", API_URL + "/api/recommendations?" + params.toString());
                 const res = await fetch(API_URL + "/api/recommendations?" + params.toString());
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 profiles = await res.json();
-                console.log("📥 Загружено анкет:", profiles.length);
+                console.log("📥 Загружено анкет:", profiles.length, profiles);
                 renderCard();
             } catch (e) {
-                console.error("Ошибка загрузки:", e);
+                console.error("❌ Ошибка загрузки:", e);
                 document.getElementById("cards").innerHTML = `
                     <div class="empty">
                         <div class="empty-icon">⚠️</div>
@@ -315,17 +308,6 @@
 
             const profile = profiles[currentIndex];
             console.log(direction === "right" ? "❤️ Лайк" : "❌ Дизлайк", profile);
-
-            // TODO: отправка лайка на сервер
-            // fetch(API_URL + "/api/likes", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({
-            //         from_user: getTelegramId(),
-            //         to_user: profile.telegram_id,
-            //         is_like: direction === "right"
-            //     })
-            // });
 
             setTimeout(() => {
                 currentIndex++;
