@@ -1,23 +1,26 @@
-@'
 let currentScreen = 0;
 const screens = ["language", "name", "gender", "age", "bio", "done"];
 const userData = { language: "ru" };
 
 function updateProgress() {
     const total = screens.length - 1;
-    const percent = ((currentScreen) / total) * 100;
+    const percent = (currentScreen / total) * 100;
     document.getElementById("progressBar").style.width = Math.max(percent, 5) + "%";
 }
 
 function showScreen(index) {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById("screen-" + screens[index]).classList.add("active");
+    const target = document.getElementById("screen-" + screens[index]);
+    if (target) {
+        target.classList.add("active");
+    }
     currentScreen = index;
     updateProgress();
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function shake(el) {
+    if (!el) return;
     el.classList.add("shake");
     setTimeout(() => el.classList.remove("shake"), 300);
 }
@@ -38,8 +41,14 @@ function nextScreen() {
     if (screens[currentScreen] === "gender") {
         const myGender = document.querySelector("[data-group='my-gender'] .choice.selected");
         const lookingFor = document.querySelector("[data-group='looking-for'] .choice.selected");
-        if (!myGender) { shake(document.querySelector("[data-group='my-gender']")); return; }
-        if (!lookingFor) { shake(document.querySelector("[data-group='looking-for']")); return; }
+        if (!myGender) { 
+            shake(document.querySelector("[data-group='my-gender']")); 
+            return; 
+        }
+        if (!lookingFor) { 
+            shake(document.querySelector("[data-group='looking-for']")); 
+            return; 
+        }
         userData.myGender = myGender.dataset.value;
         userData.lookingFor = lookingFor.dataset.value;
     }
@@ -50,21 +59,30 @@ function nextScreen() {
         userData.maxAge = document.getElementById("max-age-value").innerText;
     }
     
-    if (currentScreen < screens.length - 1) showScreen(currentScreen + 1);
+    if (currentScreen < screens.length - 1) {
+        showScreen(currentScreen + 1);
+    }
 }
 
 function prevScreen() {
-    if (currentScreen > 0) showScreen(currentScreen - 1);
+    if (currentScreen > 0) {
+        showScreen(currentScreen - 1);
+    }
 }
 
-document.querySelectorAll(".lang-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        userData.language = btn.dataset.lang;
+// Выбор языка
+function initLangButtons() {
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            userData.language = btn.dataset.lang;
+            if (navigator.vibrate) navigator.vibrate(10);
+        });
     });
-});
+}
 
+// Выбор карточки
 function selectChoice(el) {
     const group = el.closest(".choice-group");
     group.querySelectorAll(".choice").forEach(c => c.classList.remove("selected"));
@@ -72,9 +90,10 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
+// Финал
 function finishOnboarding() {
     userData.bio = document.getElementById("input-bio").value.trim();
-    console.log("📦 Данные:", userData);
+    console.log("📦 Данные пользователя:", userData);
     
     const genderText = { "male": "Парень", "female": "Девушка", "any": "Без разницы" };
     
@@ -90,7 +109,9 @@ function finishOnboarding() {
     showScreen(5);
 }
 
-function restart() { location.reload(); }
+function restart() {
+    location.reload();
+}
 
 // Telegram WebApp
 if (window.Telegram && window.Telegram.WebApp) {
@@ -98,5 +119,6 @@ if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.expand();
 }
 
+// Инициализация
+initLangButtons();
 showScreen(0);
-'@ | Out-File -FilePath script.js -Encoding UTF8
