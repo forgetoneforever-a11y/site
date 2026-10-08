@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0618">
     <title>Ember — Лента</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
         body { padding: 0; overflow: hidden; }
@@ -146,7 +147,6 @@
             font-size: 16px;
         }
 
-        /* 💕 ПОПАП МЭТЧ */
         .match-overlay {
             position: fixed;
             inset: 0;
@@ -283,7 +283,6 @@
         <button class="action-btn btn-like" onclick="swipe('right')">♥</button>
     </div>
 
-    <!-- 💕 Попап мэтча -->
     <div class="match-overlay" id="matchOverlay">
         <div class="match-card">
             <div class="match-emoji">💕</div>
@@ -393,107 +392,4 @@
             }
 
             const profile = profiles[currentIndex];
-            const card = document.createElement("div");
-            card.className = "card";
-            const photoSrc = profile.photo || "images/girl.png";
-            card.innerHTML = `
-                <img src="${photoSrc}" alt="${profile.name}" onerror="this.src='images/girl.png'">
-                <div class="card-info">
-                    <div class="card-name">${profile.name}, <span class="card-age">${profile.age}</span></div>
-                    <div class="card-bio">${profile.bio || ''}</div>
-                </div>
-            `;
-            container.appendChild(card);
-        }
-
-        async function swipe(direction) {
-            const card = document.querySelector(".card");
-            if (!card) return;
-
-            if (navigator.vibrate) navigator.vibrate(20);
-            card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
-
-            const profile = profiles[currentIndex];
-            const isLike = direction === "right";
-
-            try {
-                const response = await fetch(API_URL + "/api/likes", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        from_user: getTelegramId(),
-                        to_user: profile.telegram_id,
-                        is_like: isLike
-                    })
-                });
-                const result = await response.json();
-                console.log("💾 Лайк сохранён:", result);
-
-                if (result.isMatch && isLike) {
-                    lastMatchedUser = result.matchedUser;
-                    setTimeout(() => showMatch(result.matchedUser), 400);
-                }
-            } catch (e) {
-                console.error("❌ Ошибка лайка:", e);
-            }
-
-            setTimeout(() => {
-                currentIndex++;
-                renderCard();
-            }, 400);
-        }
-
-        function showMatch(matchedUser) {
-            document.getElementById("matchName").innerText = matchedUser.name + ", " + matchedUser.age;
-            document.getElementById("matchPhotoYou").src = matchedUser.photo || "images/girl.png";
-            document.getElementById("matchPhotoMe").src = myProfile.photo || "images/girl.png";
-
-            const overlay = document.getElementById("matchOverlay");
-            overlay.classList.add("active");
-
-            if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 50]);
-
-            console.log("💕 МЭТЧ с", matchedUser);
-        }
-
-        function closeMatch() {
-            document.getElementById("matchOverlay").classList.remove("active");
-        }
-
-        // 💬 Открываем бота с командой chat_<id собеседника>
-        function goToChats() {
-            closeMatch();
-
-            const partnerId = lastMatchedUser ? lastMatchedUser.telegram_id : "";
-            const url = "https://t.me/" + BOT_USERNAME + "?start=chat_" + partnerId;
-
-            console.log("🚀 Открываю бота:", url);
-
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(url);
-            } else {
-                window.open(url, "_blank");
-            }
-        }
-
-        function openMenu() {
-            if (confirm("Сбросить аккаунт и выйти?")) {
-                localStorage.removeItem("emberUser");
-                localStorage.removeItem("emberRegistered");
-                window.location.href = "index.html";
-            }
-        }
-
-        // Свайпы пальцем/мышью
-        let startX = 0;
-        document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-        document.addEventListener("touchend", e => {
-            const diff = e.changedTouches[0].clientX - startX;
-            if (diff > 80) swipe("right");
-            if (diff < -80) swipe("left");
-        });
-
-        loadProfiles();
-    </script>
-</body>
-</html>
+            const card
