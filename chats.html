@@ -4,45 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0618">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Ember — Чаты</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { padding: 0; overflow: hidden; }
+        * { box-sizing: border-box; }
 
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.15), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.12), transparent 50%),
+                        #0a0618;
+            color: #fff;
+        }
+
+        /* Плавающие частицы */
+        .bg-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-particles span {
+            position: absolute;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: rgba(217, 56, 94, 0.4);
+            animation: floatParticle 15s infinite ease-in-out;
+        }
+
+        .bg-particles span:nth-child(1) { left: 10%; top: 20%; }
+        .bg-particles span:nth-child(2) { left: 80%; top: 30%; animation-delay: 3s; background: rgba(123, 47, 255, 0.5); }
+        .bg-particles span:nth-child(3) { left: 30%; top: 70%; animation-delay: 6s; }
+        .bg-particles span:nth-child(4) { left: 70%; top: 80%; animation-delay: 9s; background: rgba(123, 47, 255, 0.5); }
+        .bg-particles span:nth-child(5) { left: 50%; top: 15%; animation-delay: 12s; }
+
+        @keyframes floatParticle {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(30px, -40px) scale(1.5); opacity: 0.8; }
+        }
+
+        /* Шапка */
         .chat-header {
             position: fixed;
             top: 0; left: 0; right: 0;
-            padding: 14px 20px;
-            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.85));
+            padding: 14px 16px;
+            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.7), transparent);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(120, 100, 220, 0.2);
             z-index: 10;
             display: flex;
             align-items: center;
             gap: 12px;
+            min-height: 66px;
         }
 
         .chat-back {
-            width: 40px; height: 40px;
+            width: 42px; height: 42px;
             border-radius: 50%;
-            background: rgba(30, 20, 60, 0.7);
+            background: rgba(30, 20, 60, 0.6);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(120, 100, 220, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: #fff;
-            font-size: 18px;
             flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .chat-back:hover { background: rgba(45, 30, 85, 0.8); }
+
+        .chat-back:hover {
+            transform: scale(1.1);
+            background: rgba(45, 30, 85, 0.8);
+            border-color: rgba(217, 56, 94, 0.6);
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+        }
+
+        .chat-back svg {
+            width: 20px; height: 20px;
+            stroke: #fff;
+            stroke-width: 2.5;
+            fill: none;
+        }
 
         .chat-title {
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            flex: 1;
+            background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .partner-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .partner-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(217, 56, 94, 0.6);
+            box-shadow: 0 0 15px rgba(217, 56, 94, 0.4);
+            flex-shrink: 0;
+        }
+
+        .partner-name {
+            font-size: 16px;
             font-weight: 700;
             color: #fff;
-            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .partner-status {
+            font-size: 12px;
+            color: #4a90e2;
+            margin-top: 2px;
         }
 
         /* Список чатов */
@@ -51,6 +153,14 @@
             padding-bottom: 20px;
             height: 100vh;
             overflow-y: auto;
+            z-index: 1;
+            position: relative;
+        }
+
+        .chats-list::-webkit-scrollbar { width: 4px; }
+        .chats-list::-webkit-scrollbar-thumb {
+            background: rgba(120, 100, 220, 0.3);
+            border-radius: 4px;
         }
 
         .chat-item {
@@ -59,79 +169,153 @@
             gap: 14px;
             padding: 14px 20px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-bottom: 1px solid rgba(120, 100, 220, 0.08);
+            animation: itemEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
         }
-        .chat-item:hover { background: rgba(45, 30, 85, 0.4); }
+
+        .chat-item:nth-child(1) { animation-delay: 0.05s; }
+        .chat-item:nth-child(2) { animation-delay: 0.1s; }
+        .chat-item:nth-child(3) { animation-delay: 0.15s; }
+        .chat-item:nth-child(4) { animation-delay: 0.2s; }
+        .chat-item:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes itemEnter {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .chat-item:hover {
+            background: linear-gradient(90deg, rgba(45, 30, 85, 0.5), rgba(45, 30, 85, 0.2));
+            transform: translateX(4px);
+        }
+
+        .chat-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
 
         .chat-avatar {
-            width: 56px; height: 56px;
+            width: 58px; height: 58px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(217, 56, 94, 0.5);
-            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(217, 56, 94, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .chat-item:hover .chat-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(217, 56, 94, 0.6);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 2px; right: 2px;
+            width: 14px; height: 14px;
+            background: #4ade80;
+            border-radius: 50%;
+            border: 2px solid #0a0618;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
         }
 
         .chat-info { flex: 1; min-width: 0; }
 
         .chat-name {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             color: #fff;
             margin-bottom: 4px;
-        }
-
-        .chat-preview {
-            font-size: 13px;
-            color: var(--muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
+        .chat-preview {
+            font-size: 13px;
+            color: var(--muted, #9a92c4);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-preview.new {
+            color: #ff5c8a;
+            font-weight: 600;
+        }
+
+        .chat-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .chat-time {
+            font-size: 11px;
+            color: var(--muted, #9a92c4);
+        }
+
         .chat-badge {
-            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            background: linear-gradient(135deg, #d9385e, #a02040);
             color: #fff;
             border-radius: 12px;
-            padding: 2px 8px;
+            padding: 3px 9px;
             font-size: 12px;
             font-weight: 700;
-            min-width: 22px;
+            min-width: 24px;
             text-align: center;
+            box-shadow: 0 2px 10px rgba(217, 56, 94, 0.6);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 2px 10px rgba(217, 56, 94, 0.6); }
+            50% { box-shadow: 0 2px 20px rgba(217, 56, 94, 1), 0 0 30px rgba(217, 56, 94, 0.5); }
         }
 
         /* Открытый чат */
         .messages {
             position: fixed;
-            top: 70px; bottom: 70px;
+            top: 70px; bottom: 80px;
             left: 0; right: 0;
             overflow-y: auto;
             padding: 16px 20px;
             display: flex;
             flex-direction: column;
             gap: 8px;
+            z-index: 1;
+        }
+
+        .messages::-webkit-scrollbar { width: 4px; }
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(120, 100, 220, 0.3);
+            border-radius: 4px;
         }
 
         .message {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 16px;
+            max-width: 78%;
+            padding: 11px 15px;
+            border-radius: 18px;
             font-size: 15px;
-            line-height: 1.4;
+            line-height: 1.45;
             word-wrap: break-word;
-            animation: msgIn 0.3s;
+            animation: msgIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         @keyframes msgIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .message.me {
             align-self: flex-end;
-            background: linear-gradient(135deg, var(--purple), var(--accent));
+            background: linear-gradient(135deg, #7b2fff, #d9385e);
             color: #fff;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(123, 47, 255, 0.4);
         }
 
         .message.them {
@@ -147,6 +331,7 @@
             font-size: 10px;
             opacity: 0.6;
             margin-top: 4px;
+            text-align: right;
         }
 
         /* Поле ввода */
@@ -155,43 +340,78 @@
             bottom: 0; left: 0; right: 0;
             padding: 12px 16px;
             padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            background: rgba(10, 6, 24, 0.95);
+            background: linear-gradient(180deg, transparent, rgba(10, 6, 24, 0.95) 20%);
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(120, 100, 220, 0.2);
             display: flex;
             gap: 10px;
             align-items: center;
+            z-index: 10;
         }
 
         .input-bar input {
             flex: 1;
-            background: rgba(30, 20, 60, 0.7);
+            background: rgba(30, 20, 60, 0.75);
+            backdrop-filter: blur(20px);
             border: 1.5px solid rgba(120, 100, 220, 0.3);
             border-radius: 24px;
-            padding: 12px 18px;
+            padding: 13px 18px;
             color: #fff;
             font-size: 15px;
             font-family: inherit;
             outline: none;
+            transition: all 0.3s;
         }
-        .input-bar input:focus { border-color: var(--accent); }
+
+        .input-bar input:focus {
+            border-color: #d9385e;
+            background: rgba(45, 30, 85, 0.85);
+            box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.3);
+        }
+
+        .input-bar input::placeholder { color: #5a5580; }
 
         .send-btn {
             width: 48px; height: 48px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(135deg, var(--purple), var(--accent));
+            background: linear-gradient(135deg, #7b2fff, #d9385e);
             color: #fff;
             font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(123, 47, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(123, 47, 255, 0.5);
             flex-shrink: 0;
-            transition: transform 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
+
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+
+        .send-btn:hover::before { transform: translateX(100%); }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(123, 47, 255, 0.7);
+        }
+
         .send-btn:active { transform: scale(0.9); }
+
+        .send-btn svg {
+            width: 20px; height: 20px;
+            fill: #fff;
+            position: relative;
+            z-index: 1;
+        }
 
         .empty-chats {
             display: flex;
@@ -199,29 +419,103 @@
             align-items: center;
             justify-content: center;
             height: 70vh;
-            color: var(--muted);
+            color: var(--muted, #9a92c4);
             text-align: center;
             padding: 40px;
             gap: 16px;
+            animation: fadeIn 0.5s;
         }
-        .empty-chats-icon { font-size: 60px; opacity: 0.4; }
-        .empty-chats-title { font-size: 20px; color: #fff; font-weight: 600; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .empty-chats-icon {
+            font-size: 70px;
+            opacity: 0.5;
+            animation: pulseSlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .empty-chats-title {
+            font-size: 22px;
+            color: #fff;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff5c8a, #7b2fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-chats-btn {
+            margin-top: 16px;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #7b2fff, #d9385e);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(123, 47, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .empty-chats-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 35px rgba(123, 47, 255, 0.7);
+        }
 
         .view { display: none; }
         .view.active { display: block; }
+
+        /* Загрузка */
+        .loading-chats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            gap: 16px;
+            color: var(--muted, #9a92c4);
+        }
+
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(120, 100, 220, 0.2);
+            border-top-color: #d9385e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
+    <div class="bg-particles">
+        <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
     <!-- ВИД 1: Список чатов -->
     <div class="view active" id="view-list">
         <div class="chat-header">
-            <div class="chat-back" onclick="goBack()">←</div>
+            <div class="chat-back" onclick="goBack()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </div>
             <div class="chat-title">💬 Чаты</div>
         </div>
         <div class="chats-list" id="chatsList">
-            <div class="empty-chats">
-                <div class="empty-chats-icon">⏳</div>
+            <div class="loading-chats">
+                <div class="loading-spinner"></div>
                 <div>Загрузка...</div>
             </div>
         </div>
@@ -230,16 +524,25 @@
     <!-- ВИД 2: Открытый чат -->
     <div class="view" id="view-chat">
         <div class="chat-header">
-            <div class="chat-back" onclick="closeChat()">←</div>
-            <img id="partnerAvatar" class="chat-avatar" style="width:40px;height:40px;" src="images/girl.png" alt="">
-            <div class="chat-title" id="partnerName">Чат</div>
+            <div class="chat-back" onclick="closeChat()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </div>
+            <div class="partner-info">
+                <img id="partnerAvatar" class="partner-avatar" src="images/girl.png" alt="">
+                <div style="min-width:0;">
+                    <div class="partner-name" id="partnerName">Чат</div>
+                    <div class="partner-status">в сети</div>
+                </div>
+            </div>
         </div>
 
         <div class="messages" id="messages"></div>
 
         <div class="input-bar">
             <input type="text" id="messageInput" placeholder="Сообщение..." autocomplete="off" onkeydown="if(event.key==='Enter')sendMessage()">
-            <button class="send-btn" onclick="sendMessage()">➤</button>
+            <button class="send-btn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
         </div>
     </div>
 
@@ -263,15 +566,12 @@
         }
 
         myId = getTelegramId();
-        console.log("👤 Мой ID:", myId);
 
-        // Загрузить список мэтчей + последние сообщения
         async function loadChatsList() {
             try {
                 const res = await fetch(API_URL + "/api/matches?telegram_id=" + myId);
                 const matches = await res.json();
 
-                // Непрочитанные
                 let unread = {};
                 try {
                     const unreadRes = await fetch(API_URL + "/api/messages/unread?telegram_id=" + myId);
@@ -287,22 +587,27 @@
                             <div class="empty-chats-icon">💔</div>
                             <div class="empty-chats-title">Пока нет мэтчей</div>
                             <div>Открой Ember и найди кого-то!</div>
-                            <button class="match-btn match-btn-primary" onclick="location.href='feed.html'" style="margin-top:16px;max-width:220px;">🔥 Открыть ленту</button>
+                            <button class="empty-chats-btn" onclick="location.href='feed.html'">🔥 Открыть ленту</button>
                         </div>
                     `;
                     return;
                 }
 
-                list.innerHTML = matches.map(m => {
+                list.innerHTML = matches.map((m, index) => {
                     const badge = unread[m.telegram_id] ? `<div class="chat-badge">${unread[m.telegram_id]}</div>` : "";
+                    const previewClass = unread[m.telegram_id] ? "chat-preview new" : "chat-preview";
+                    const previewText = unread[m.telegram_id] ? "Новое сообщение..." : "Нажми, чтобы открыть чат";
                     return `
                         <div class="chat-item" onclick="openChat('${m.telegram_id}', '${m.name}', '${m.age}', '${m.photo || ''}')">
-                            <img src="${m.photo || 'images/girl.png'}" class="chat-avatar" onerror="this.src='images/girl.png'">
+                            <div class="chat-avatar-wrapper">
+                                <img src="${m.photo || 'images/girl.png'}" class="chat-avatar" onerror="this.src='images/girl.png'">
+                                <div class="online-dot"></div>
+                            </div>
                             <div class="chat-info">
                                 <div class="chat-name">${m.name}, ${m.age}</div>
-                                <div class="chat-preview">Нажми, чтобы открыть чат</div>
+                                <div class="${previewClass}">${previewText}</div>
                             </div>
-                            ${badge}
+                            <div class="chat-meta">${badge}</div>
                         </div>
                     `;
                 }).join("");
@@ -311,13 +616,13 @@
                 document.getElementById("chatsList").innerHTML = `
                     <div class="empty-chats">
                         <div class="empty-chats-icon">⚠️</div>
-                        <div>Не удалось загрузить чаты</div>
+                        <div class="empty-chats-title">Не удалось загрузить</div>
+                        <div>Проверь интернет</div>
                     </div>
                 `;
             }
         }
 
-        // Открыть чат
         function openChat(partnerId, partnerName, partnerAge, partnerPhoto) {
             currentPartner = { id: partnerId, name: partnerName, age: partnerAge };
             document.getElementById("partnerName").innerText = `${partnerName}, ${partnerAge}`;
@@ -326,14 +631,13 @@
             document.getElementById("view-list").classList.remove("active");
             document.getElementById("view-chat").classList.add("active");
 
+            document.getElementById("messages").innerHTML = "";
             loadMessages();
 
-            // Полинг каждые 3 сек
             if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(loadMessages, 3000);
         }
 
-        // Закрыть чат
         function closeChat() {
             if (pollInterval) clearInterval(pollInterval);
             currentPartner = null;
@@ -342,12 +646,10 @@
             loadChatsList();
         }
 
-        // Назад
         function goBack() {
             window.location.href = "feed.html";
         }
 
-        // Загрузить сообщения
         async function loadMessages() {
             if (!currentPartner) return;
 
@@ -369,7 +671,7 @@
                     `;
                 }).join("");
 
-                if (wasAtBottom) {
+                if (wasAtBottom || messages.length <= 1) {
                     container.scrollTop = container.scrollHeight;
                 }
             } catch (e) {
@@ -377,7 +679,6 @@
             }
         }
 
-        // Отправить сообщение
         async function sendMessage() {
             const input = document.getElementById("messageInput");
             const text = input.value.trim();
@@ -385,7 +686,6 @@
 
             input.value = "";
 
-            // Оптимистичный UI
             const container = document.getElementById("messages");
             const time = new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
             container.insertAdjacentHTML("beforeend", `
@@ -419,8 +719,25 @@
             return div.innerHTML;
         }
 
-        // Старт
-        loadChatsList();
+        // Проверка ?open=<id>
+        const urlParams = new URLSearchParams(window.location.search);
+        const openId = urlParams.get("open");
+
+        loadChatsList().then(() => {
+            if (openId) {
+                // Находим в списке и открываем автоматически
+                setTimeout(async () => {
+                    try {
+                        const res = await fetch(API_URL + "/api/matches?telegram_id=" + myId);
+                        const matches = await res.json();
+                        const partner = matches.find(m => String(m.telegram_id) === String(openId));
+                        if (partner) {
+                            openChat(partner.telegram_id, partner.name, partner.age, partner.photo);
+                        }
+                    } catch (e) { console.warn(e); }
+                }, 300);
+            }
+        });
     </script>
 </body>
 </html>
