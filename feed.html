@@ -1132,17 +1132,14 @@
                     <div class="empty">
                         <div class="empty-icon">⚠️</div>
                         <div class="empty-title">Не удалось загрузить</div>
-                        <div>Проверь интернет или попробуй позже</div>
-                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
-                            🔄 Попробовать снова
-                        </button>
+                        <div>Проверь интернет — и нажми 🔄 внизу</div>
                     </div>
                 `;
+                document.getElementById("actions").style.display = "flex";
                 return 0;
             }
         }
 
-        // 🔄 Обновить анкеты
         async function refreshProfiles() {
             if (navigator.vibrate) navigator.vibrate(15);
 
@@ -1161,7 +1158,7 @@
                     </div>
                 </div>
             `;
-            document.getElementById("actions").style.display = "none";
+            document.getElementById("actions").style.display = "flex";
 
             const count = await loadProfiles();
 
@@ -1172,11 +1169,9 @@
                         <div class="empty-icon">🔍</div>
                         <div class="empty-title">Новых анкет нет</div>
                         <div>Заходи позже — появятся новые пользователи</div>
-                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
-                            🔄 Обновить ещё раз
-                        </button>
                     </div>
                 `;
+                document.getElementById("actions").style.display = "flex";
             }
         }
 
@@ -1189,13 +1184,10 @@
                     <div class="empty">
                         <div class="empty-icon">🔥</div>
                         <div class="empty-title">Пока никого нет</div>
-                        <div>Заходи позже — появятся новые</div>
-                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
-                            🔄 Обновить
-                        </button>
+                        <div>Нажми 🔄 внизу, чтобы обновить</div>
                     </div>
                 `;
-                document.getElementById("actions").style.display = "none";
+                document.getElementById("actions").style.display = "flex";
                 return;
             }
 
@@ -1206,13 +1198,10 @@
                     <div class="empty">
                         <div class="empty-icon">✨</div>
                         <div class="empty-title">Анкеты закончились</div>
-                        <div>Попробуй обновить — могут появиться новые</div>
-                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
-                            🔄 Обновить
-                        </button>
+                        <div>Нажми 🔄 внизу, чтобы обновить</div>
                     </div>
                 `;
-                document.getElementById("actions").style.display = "none";
+                document.getElementById("actions").style.display = "flex";
                 return;
             }
 
@@ -1742,7 +1731,6 @@
             }
         }
 
-        // УДАЛЕНИЕ АККАУНТА
         function openDeleteModal() {
             document.getElementById("deleteModal").classList.add("active");
             if (navigator.vibrate) navigator.vibrate(20);
@@ -1793,7 +1781,6 @@
             if (e.target.id === "deleteModal") closeDeleteModal();
         });
 
-        // БЕЙДЖИ
         let isActive = true;
         document.addEventListener("visibilitychange", () => {
             isActive = !document.hidden;
