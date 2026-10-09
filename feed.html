@@ -115,24 +115,79 @@
             backdrop-filter: blur(20px);
             border-radius: 24px; overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(123, 47, 255, 0.2), inset 0 0 0 1px rgba(120, 100, 220, 0.2);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
-            animation: cardEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: grab;
+            touch-action: pan-y;
+            will-change: transform;
+            animation: cardSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes cardEnter {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card.dragging {
+            transition: none !important;
+            cursor: grabbing;
+            animation: none;
+        }
+
+        .card img { width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; pointer-events: none; }
 
         .card-info {
             position: absolute; bottom: 0; left: 0; right: 0;
             padding: 24px;
             background: linear-gradient(0deg, rgba(0,0,0,0.95), rgba(0,0,0,0.6), transparent);
             color: #fff;
+            pointer-events: none;
         }
         .card-name { font-size: 26px; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .card-age { font-size: 22px; color: rgba(255,255,255,0.9); font-weight: 400; }
         .card-bio { font-size: 14px; color: rgba(255,255,255,0.85); margin-top: 8px; line-height: 1.4; }
+
+        /* Индикаторы LIKE/NOPE */
+        .card-stamp {
+            position: absolute;
+            top: 40px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: rotate(-15deg) scale(0.8);
+            pointer-events: none;
+            z-index: 5;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .card-stamp-like {
+            left: 30px;
+            color: #10b981;
+            border: 4px solid #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        }
+        .card-stamp-nope {
+            right: 30px;
+            color: #ff5c8a;
+            border: 4px solid #ff5c8a;
+            transform: rotate(15deg) scale(0.8);
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.6);
+        }
+        .card-stamp-nope.visible {
+            transform: rotate(15deg) scale(1);
+        }
+
+        .card.swipe-left {
+            transform: translateX(-150%) rotate(-30deg);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+        }
+        .card.swipe-right {
+            transform: translateX(150%) rotate(30deg);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+        }
 
         .actions {
             position: fixed; bottom: 24px; left: 0; right: 0;
@@ -176,9 +231,6 @@
         .btn-like:hover {
             box-shadow: 0 12px 40px rgba(123, 47, 255, 0.8), 0 0 80px rgba(217, 56, 94, 0.6);
         }
-
-        .card.swipe-left { transform: translateX(-150%) rotate(-30deg); opacity: 0; }
-        .card.swipe-right { transform: translateX(150%) rotate(30deg); opacity: 0; }
 
         .empty {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -677,9 +729,7 @@
             padding: 20px;
             animation: fadeIn 0.3s;
         }
-        .delete-modal.active {
-            display: flex;
-        }
+        .delete-modal.active { display: flex; }
         .delete-modal-card {
             background: linear-gradient(135deg, rgba(40, 15, 30, 0.98), rgba(60, 20, 50, 0.95));
             border: 2px solid rgba(217, 56, 94, 0.7);
@@ -688,9 +738,7 @@
             max-width: 360px;
             width: 100%;
             text-align: center;
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.6),
-                0 0 60px rgba(217, 56, 94, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(217, 56, 94, 0.5);
             animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .delete-modal-icon {
@@ -700,30 +748,19 @@
             animation: pulseSlow 1.5s ease-in-out infinite;
         }
         .delete-modal-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: #ff5c8a;
-            margin-bottom: 10px;
+            font-size: 24px; font-weight: 800;
+            color: #ff5c8a; margin-bottom: 10px;
         }
         .delete-modal-text {
-            font-size: 14px;
-            color: #c9b8ff;
-            line-height: 1.5;
-            margin-bottom: 24px;
+            font-size: 14px; color: #c9b8ff;
+            line-height: 1.5; margin-bottom: 24px;
         }
-        .delete-modal-text b {
-            color: #ff5c8a;
-        }
+        .delete-modal-text b { color: #ff5c8a; }
         .delete-modal-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s;
+            width: 100%; padding: 14px; border: none;
+            border-radius: 14px; font-size: 15px;
+            font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: all 0.3s;
             margin-bottom: 10px;
         }
         .delete-modal-btn-danger {
@@ -734,9 +771,6 @@
         .delete-modal-btn-danger:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 35px rgba(217, 56, 94, 0.8);
-        }
-        .delete-modal-btn-danger:active {
-            transform: scale(0.98);
         }
         .delete-modal-btn-cancel {
             background: transparent;
@@ -1012,8 +1046,11 @@
             const profile = profiles[currentIndex];
             const card = document.createElement("div");
             card.className = "card";
+            card.dataset.userId = profile.telegram_id;
             const photoSrc = profile.photo || "images/girl.png";
             card.innerHTML = `
+                <div class="card-stamp card-stamp-like">LIKE</div>
+                <div class="card-stamp card-stamp-nope">NOPE</div>
                 <img src="${photoSrc}" alt="${profile.name}" onerror="this.src='images/girl.png'">
                 <div class="card-info">
                     <div class="card-name">${profile.name}, <span class="card-age">${profile.age}</span></div>
@@ -1021,6 +1058,7 @@
                 </div>
             `;
             container.appendChild(card);
+            initDrag(card);
         }
 
         async function swipe(direction) {
@@ -1079,6 +1117,118 @@
                 return;
             }
             window.location.href = "chats.html?open=" + lastMatchedUser.telegram_id;
+        }
+
+        // ═══ ПЛАВНЫЕ СВАЙПЫ ═══
+        let dragState = {
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            currentX: 0,
+            currentY: 0,
+            card: null
+        };
+
+        function initDrag(card) {
+            card.addEventListener("touchstart", onDragStart, { passive: false });
+            card.addEventListener("touchmove", onDragMove, { passive: false });
+            card.addEventListener("touchend", onDragEnd);
+            card.addEventListener("touchcancel", onDragEnd);
+            card.addEventListener("mousedown", onDragStart);
+        }
+
+        function onDragStart(e) {
+            const card = e.currentTarget;
+            if (card.classList.contains("swipe-left") || card.classList.contains("swipe-right")) return;
+
+            const touch = e.touches ? e.touches[0] : e;
+            dragState.isDragging = true;
+            dragState.startX = touch.clientX;
+            dragState.startY = touch.clientY;
+            dragState.currentX = touch.clientX;
+            dragState.currentY = touch.clientY;
+            dragState.card = card;
+            card.classList.add("dragging");
+
+            if (e.type === "mousedown") {
+                document.addEventListener("mousemove", onDragMove);
+                document.addEventListener("mouseup", onDragEnd);
+            }
+        }
+
+        function onDragMove(e) {
+            if (!dragState.isDragging || !dragState.card) return;
+            if (e.cancelable) e.preventDefault();
+
+            const touch = e.touches ? e.touches[0] : e;
+            const deltaX = touch.clientX - dragState.startX;
+            const deltaY = touch.clientY - dragState.startY;
+            dragState.currentX = touch.clientX;
+            dragState.currentY = touch.clientY;
+
+            const rotate = deltaX * 0.08;
+            const card = dragState.card;
+
+            card.style.transform = `translate(${deltaX}px, ${deltaY * 0.3}px) rotate(${rotate}deg)`;
+
+            const opacity = Math.max(0.5, 1 - Math.abs(deltaX) / 500);
+            card.style.opacity = opacity;
+
+            const likeStamp = card.querySelector(".card-stamp-like");
+            const nopeStamp = card.querySelector(".card-stamp-nope");
+
+            if (deltaX > 30) {
+                const progress = Math.min(1, (deltaX - 30) / 100);
+                likeStamp.style.opacity = progress;
+                likeStamp.style.transform = `rotate(-15deg) scale(${0.8 + progress * 0.2})`;
+                nopeStamp.style.opacity = 0;
+            } else if (deltaX < -30) {
+                const progress = Math.min(1, (-deltaX - 30) / 100);
+                nopeStamp.style.opacity = progress;
+                nopeStamp.style.transform = `rotate(15deg) scale(${0.8 + progress * 0.2})`;
+                likeStamp.style.opacity = 0;
+            } else {
+                likeStamp.style.opacity = 0;
+                nopeStamp.style.opacity = 0;
+            }
+        }
+
+        function onDragEnd() {
+            if (!dragState.isDragging || !dragState.card) return;
+
+            const deltaX = dragState.currentX - dragState.startX;
+            const card = dragState.card;
+            const threshold = 80;
+
+            document.removeEventListener("mousemove", onDragMove);
+            document.removeEventListener("mouseup", onDragEnd);
+
+            card.classList.remove("dragging");
+
+            if (deltaX > threshold) {
+                card.style.transform = "";
+                card.style.opacity = "";
+                swipe("right");
+            } else if (deltaX < -threshold) {
+                card.style.transform = "";
+                card.style.opacity = "";
+                swipe("left");
+            } else {
+                card.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s";
+                card.style.transform = "";
+                card.style.opacity = "";
+                setTimeout(() => {
+                    card.style.transition = "";
+                }, 400);
+
+                const likeStamp = card.querySelector(".card-stamp-like");
+                const nopeStamp = card.querySelector(".card-stamp-nope");
+                if (likeStamp) likeStamp.style.opacity = 0;
+                if (nopeStamp) nopeStamp.style.opacity = 0;
+            }
+
+            dragState.isDragging = false;
+            dragState.card = null;
         }
 
         // ═══ ПАНЕЛЬ ЛАЙКОВ ═══
@@ -1454,18 +1604,6 @@
             } catch (e) {}
         }
 
-        // ═══ СВАЙПЫ ═══
-        let startX = 0;
-        document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-        document.addEventListener("touchend", e => {
-            if (document.getElementById("likesView").classList.contains("active")) return;
-            if (document.getElementById("profileOverlay").classList.contains("active")) return;
-            if (document.getElementById("deleteModal").classList.contains("active")) return;
-            const diff = e.changedTouches[0].clientX - startX;
-            if (diff > 80) swipe("right");
-            if (diff < -80) swipe("left");
-        });
-
         loadProfiles();
         checkUnread();
         checkLikesBadge();
@@ -1473,4 +1611,4 @@
         setInterval(checkLikesBadge, 15000);
     </script>
 </body>
-                </html>
+    </html>
