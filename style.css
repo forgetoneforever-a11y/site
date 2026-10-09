@@ -1,9 +1,9 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 :root {
-    --bg: #000000;
-    --card: rgba(20, 20, 20, 0.85);
-    --card-hover: rgba(35, 35, 35, 0.85);
+    --bg: #1a1a1a;
+    --card: rgba(30, 30, 30, 0.85);
+    --card-hover: rgba(45, 45, 45, 0.85);
     --border: rgba(255, 255, 255, 0.15);
     --text: #ffffff;
     --muted: #808080;
@@ -22,12 +22,20 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.06), transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(180, 180, 180, 0.05), transparent 60%),
-        linear-gradient(135deg, #000000 0%, #0d0d0d 50%, #000000 100%);
+    background: #1a1a1a;
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.14), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(200, 200, 200, 0.1), transparent 60%),
+        linear-gradient(135deg, #0d0d0d 0%, #2a2a2a 25%, #0d0d0d 50%, #2a2a2a 75%, #0d0d0d 100%);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 200% 200%;
     background-attachment: fixed;
+    animation: bgShift 15s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+    0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%, 0% 50%; }
+    50% { background-position: 20% 20%, 80% 80%, 50% 50%, 100% 50%; }
 }
 
 /* Прогресс-бар */
@@ -121,7 +129,7 @@ label {
 /* Поля ввода */
 input[type="text"], textarea {
     width: 100%;
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
@@ -137,7 +145,7 @@ input[type="text"]::placeholder, textarea::placeholder { color: #555; }
 
 input[type="text"]:focus, textarea:focus {
     border-color: #ffffff;
-    background: rgba(35, 35, 35, 0.85);
+    background: rgba(45, 45, 45, 0.85);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
@@ -198,13 +206,13 @@ input[type="text"]:focus, textarea:focus {
 
 .btn-back {
     width: 56px;
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     color: #fff;
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     font-size: 20px;
 }
 
-.btn-back:hover { background: rgba(35, 35, 35, 0.85); }
+.btn-back:hover { background: rgba(45, 45, 45, 0.85); }
 
 .btn-skip {
     width: 100%;
@@ -234,7 +242,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn {
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 12px;
@@ -260,7 +268,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn:hover {
-    background: rgba(35, 35, 35, 0.85);
+    background: rgba(45, 45, 45, 0.85);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -273,7 +281,7 @@ input[type="text"]:focus, textarea:focus {
 
 /* Карточки выбора */
 .choice {
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
@@ -288,7 +296,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .choice:hover {
-    background: rgba(35, 35, 35, 0.85);
+    background: rgba(45, 45, 45, 0.85);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -320,7 +328,7 @@ input[type="text"]:focus, textarea:focus {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
@@ -379,7 +387,7 @@ input[type="range"]::-moz-range-thumb {
     width: 100%;
     aspect-ratio: 3 / 4;
     max-height: 360px;
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 2px dashed rgba(255, 255, 255, 0.25);
     border-radius: 20px;
     cursor: pointer;
@@ -390,7 +398,7 @@ input[type="range"]::-moz-range-thumb {
 
 .photo-box:hover {
     border-color: #ffffff;
-    background: rgba(35, 35, 35, 0.85);
+    background: rgba(45, 45, 45, 0.85);
 }
 
 .photo-placeholder {
@@ -423,7 +431,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* Результат */
 .result-box {
-    background: rgba(20, 20, 20, 0.75);
+    background: rgba(30, 30, 30, 0.75);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
     padding: 20px;
