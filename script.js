@@ -24,28 +24,21 @@ if (isRegistered()) {
 function getTelegramId() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
-        if (user) {
-            console.log("✅ Telegram ID:", user.id);
-            return String(user.id);
-        }
+        if (user) return String(user.id);
     }
     let id = localStorage.getItem("emberTgId");
     if (!id) {
         id = "test_" + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("emberTgId", id);
     }
-    console.log("⚠️ Fallback ID:", id);
     return id;
 }
 
-// Получить Telegram username (@username)
+// Получить Telegram username
 function getTelegramUsername() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
-        if (user && user.username) {
-            console.log("✅ Telegram username:", user.username);
-            return user.username;
-        }
+        if (user && user.username) return user.username;
     }
     return null;
 }
@@ -77,7 +70,8 @@ const translations = {
         name: "Имя", nickname: "Никнейм", gender: "Пол", looking: "Ищу",
         age: "Возраст", range: "Диапазон", bio: "О себе",
         photo: "Фото", photoLoaded: "Загружено ✓",
-        notSpecified: "Не указано"
+        notSpecified: "Не указано",
+        city: "Город"
     },
     en: {
         chooseLang: "Choose language", chooseLangSub: "Your preferred language",
@@ -104,7 +98,8 @@ const translations = {
         name: "Name", nickname: "Nickname", gender: "Gender", looking: "Looking for",
         age: "Age", range: "Range", bio: "About",
         photo: "Photo", photoLoaded: "Uploaded",
-        notSpecified: "Not specified"
+        notSpecified: "Not specified",
+        city: "City"
     },
     ua: {
         chooseLang: "Обери мову", chooseLangSub: "Зручна тобі мова",
@@ -131,7 +126,8 @@ const translations = {
         name: "Ім'я", nickname: "Нікнейм", gender: "Стать", looking: "Шукаю",
         age: "Вік", range: "Діапазон", bio: "Про себе",
         photo: "Фото", photoLoaded: "Завантажено",
-        notSpecified: "Не вказано"
+        notSpecified: "Не вказано",
+        city: "Місто"
     },
     sr: {
         chooseLang: "Izaberi jezik", chooseLangSub: "Jezik koji ti odgovara",
@@ -158,7 +154,8 @@ const translations = {
         name: "Ime", nickname: "Nadimak", gender: "Pol", looking: "Trazim",
         age: "Godine", range: "Opseg", bio: "O sebi",
         photo: "Fotografija", photoLoaded: "Otpremljeno",
-        notSpecified: "Nije navedeno"
+        notSpecified: "Nije navedeno",
+        city: "Grad"
     },
     kz: {
         chooseLang: "Тілді таңда", chooseLangSub: "Өзіңе ыңғайлы тіл",
@@ -185,7 +182,8 @@ const translations = {
         name: "Аты", nickname: "Лақап ат", gender: "Жынысы", looking: "Іздеймін",
         age: "Жасы", range: "Диапазон", bio: "Өзі туралы",
         photo: "Фотосурет", photoLoaded: "Жүктелді",
-        notSpecified: "Көрсетілмеген"
+        notSpecified: "Көрсетілмеген",
+        city: "Қала"
     }
 };
 
@@ -231,6 +229,7 @@ function nextScreen() {
         if (name.length < 2) { shake(nameInput); nameInput.focus(); return; }
         userData.name = name;
         userData.nickname = document.getElementById("input-nickname").value.trim();
+        userData.city = document.getElementById("input-city").value.trim();
     }
 
     if (screens[currentScreen] === "gender") {
@@ -306,8 +305,6 @@ async function finishOnboarding() {
     const tgUsername = getTelegramUsername();
 
     console.log("📦 Данные:", userData);
-    console.log("🆔 Telegram ID:", tgId);
-    console.log("📛 Telegram username:", tgUsername);
 
     try {
         const response = await fetch(API_URL + "/api/register", {
@@ -318,6 +315,7 @@ async function finishOnboarding() {
                 username: tgUsername,
                 name: userData.name,
                 nickname: userData.nickname || null,
+                city: userData.city || null,
                 age: parseInt(userData.age),
                 gender: userData.myGender,
                 looking_for: userData.lookingFor,
@@ -325,6 +323,7 @@ async function finishOnboarding() {
                 max_age: parseInt(userData.maxAge),
                 bio: userData.bio || null,
                 photo: userData.photo || null,
+                banner: "default",
                 language: userData.language
             })
         });
@@ -340,6 +339,7 @@ async function finishOnboarding() {
         resultBox.innerHTML =
             "<p><span>" + t("name") + "</span> <strong>" + (userData.name || "—") + "</strong></p>" +
             "<p><span>" + t("nickname") + "</span> <strong>" + (userData.nickname || "—") + "</strong></p>" +
+            "<p><span>" + t("city") + "</span> <strong>" + (userData.city || "—") + "</strong></p>" +
             "<p><span>" + t("gender") + "</span> <strong>" + (genderText[userData.myGender] || "—") + "</strong></p>" +
             "<p><span>" + t("looking") + "</span> <strong>" + (genderText[userData.lookingFor] || "—") + "</strong></p>" +
             "<p><span>" + t("age") + "</span> <strong>" + (userData.age || "—") + "</strong></p>" +
