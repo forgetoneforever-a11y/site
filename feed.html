@@ -73,6 +73,22 @@
         .feed-menu svg { width: 20px; height: 20px; stroke: #fff; transition: stroke 0.2s; }
         .feed-menu:hover svg { stroke: #ff5c8a; }
 
+        /* Кнопка-аватарка */
+        .profile-btn {
+            padding: 0 !important;
+            overflow: hidden;
+            border: 2px solid rgba(217, 56, 94, 0.6) !important;
+            box-shadow: 0 0 15px rgba(217, 56, 94, 0.4) !important;
+        }
+        .profile-btn img {
+            width: 100%; height: 100%;
+            object-fit: cover; border-radius: 50%; display: block;
+        }
+        .profile-btn:hover {
+            border-color: rgba(217, 56, 94, 1) !important;
+            box-shadow: 0 0 25px rgba(217, 56, 94, 0.8) !important;
+        }
+
         .unread-badge {
             position: absolute; top: -4px; right: -4px;
             background: linear-gradient(135deg, #d9385e, #a02040);
@@ -317,19 +333,14 @@
             flex-shrink: 0;
         }
         .likes-tab {
-            flex: 1;
-            padding: 12px 16px;
+            flex: 1; padding: 12px 16px;
             border-radius: 14px;
             background: rgba(30, 20, 60, 0.6);
             backdrop-filter: blur(20px);
             border: 1.5px solid rgba(120, 100, 220, 0.3);
-            color: #9a92c4;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s;
-            text-align: center;
+            color: #9a92c4; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+            transition: all 0.3s; text-align: center;
         }
         .likes-tab:hover {
             background: rgba(45, 30, 85, 0.7);
@@ -337,36 +348,29 @@
         }
         .likes-tab.active {
             background: linear-gradient(135deg, #7b2fff, #d9385e);
-            color: #fff;
-            border-color: transparent;
+            color: #fff; border-color: transparent;
             box-shadow: 0 4px 20px rgba(123, 47, 255, 0.5);
         }
         .likes-tab-count {
             display: inline-block;
             background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 1px 8px;
-            font-size: 12px;
-            margin-left: 4px;
+            border-radius: 10px; padding: 1px 8px;
+            font-size: 12px; margin-left: 4px;
         }
         .likes-tab.active .likes-tab-count {
             background: rgba(255,255,255,0.3);
         }
 
         .likes-content {
-            flex: 1;
-            overflow-y: auto;
+            flex: 1; overflow-y: auto;
             padding: 0 16px 20px;
         }
         .likes-content::-webkit-scrollbar { width: 4px; }
         .likes-content::-webkit-scrollbar-thumb { background: rgba(120, 100, 220, 0.3); border-radius: 4px; }
 
         .like-card {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 18px;
-            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 18px; margin-bottom: 12px;
             border: 1.5px solid rgba(120, 100, 220, 0.35);
             border-radius: 20px;
             background: rgba(30, 20, 60, 0.5);
@@ -401,7 +405,7 @@
         .like-btn {
             width: 44px; height: 44px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 20px;
+            cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .like-btn svg { width: 20px; height: 20px; stroke-width: 2.5; fill: none; }
@@ -445,14 +449,187 @@
         .mutual-badge {
             display: inline-block;
             background: linear-gradient(135deg, #7b2fff, #d9385e);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 8px;
-            margin-left: 6px;
-            vertical-align: middle;
+            color: #fff; font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 8px;
+            margin-left: 6px; vertical-align: middle;
         }
+
+        /* ═══ ПРОФИЛЬ ═══ */
+        .profile-overlay {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.15), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.12), transparent 50%),
+                        #0a0618;
+            z-index: 2000; display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s;
+            overflow-y: auto;
+        }
+        .profile-overlay.active { display: flex; }
+
+        .profile-header-bar {
+            padding: 14px 16px;
+            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.7), transparent);
+            backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 12px;
+            min-height: 66px; flex-shrink: 0;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .profile-back-btn {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: rgba(30, 20, 60, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(120, 100, 220, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #fff; flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .profile-back-btn:hover {
+            transform: scale(1.1);
+            background: rgba(45, 30, 85, 0.8);
+            border-color: rgba(217, 56, 94, 0.6);
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+        }
+        .profile-back-btn svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.5; fill: none; }
+
+        .profile-title-bar {
+            font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
+            background-size: 200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .profile-content {
+            padding: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+            max-width: 500px; margin: 0 auto; width: 100%;
+        }
+
+        .profile-avatar-section {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 12px;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative; width: 140px; height: 140px;
+        }
+
+        .profile-avatar-img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 3px solid rgba(217, 56, 94, 0.6);
+            box-shadow: 0 0 0 6px rgba(217, 56, 94, 0.15), 0 0 30px rgba(217, 56, 94, 0.5), 0 0 60px rgba(123, 47, 255, 0.3);
+        }
+
+        .profile-avatar-edit {
+            position: absolute; bottom: 4px; right: 4px;
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(135deg, #7b2fff, #d9385e);
+            border: 3px solid #0a0618;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(123, 47, 255, 0.6);
+            transition: all 0.3s;
+        }
+        .profile-avatar-edit:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 25px rgba(123, 47, 255, 0.9);
+        }
+        .profile-avatar-edit svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2.5; fill: none; }
+
+        .profile-field {
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .profile-field label {
+            font-size: 11px; color: #9a92c4;
+            text-transform: uppercase; letter-spacing: 1px;
+            font-weight: 600; padding-left: 4px;
+        }
+        .profile-field input,
+        .profile-field textarea {
+            width: 100%;
+            background: rgba(30, 20, 60, 0.55);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(120, 100, 220, 0.3);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: #fff; font-size: 15px;
+            font-family: inherit; outline: none;
+            transition: all 0.3s; resize: vertical;
+        }
+        .profile-field input:focus,
+        .profile-field textarea:focus {
+            border-color: #d9385e;
+            background: rgba(45, 30, 85, 0.7);
+            box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.3);
+        }
+        .profile-field textarea { min-height: 100px; }
+
+        .profile-select {
+            width: 100%;
+            background: rgba(30, 20, 60, 0.55);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(120, 100, 220, 0.3);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: #fff; font-size: 15px;
+            font-family: inherit; outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239a92c4%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+        .profile-select:focus {
+            border-color: #d9385e;
+            box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.3);
+        }
+        .profile-select option {
+            background: #1a1030; color: #fff;
+        }
+
+        .profile-save-btn {
+            width: 100%; padding: 16px; border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #7b2fff, #d9385e);
+            color: #fff; font-size: 16px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 6px 25px rgba(123, 47, 255, 0.5);
+            transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .profile-save-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%); transition: transform 0.6s;
+        }
+        .profile-save-btn:hover::before { transform: translateX(100%); }
+        .profile-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 35px rgba(123, 47, 255, 0.7);
+        }
+        .profile-save-btn:active { transform: scale(0.98); }
+
+        .profile-logout-btn {
+            width: 100%; padding: 14px;
+            border: 1.5px solid rgba(217, 56, 94, 0.4);
+            border-radius: 14px;
+            background: rgba(217, 56, 94, 0.1);
+            color: #ff5c8a; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+            transition: all 0.3s;
+        }
+        .profile-logout-btn:hover {
+            background: rgba(217, 56, 94, 0.2);
+            border-color: #d9385e;
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+        }
+
+        .profile-photo-input { display: none; }
     </style>
 </head>
 <body>
@@ -476,12 +653,8 @@
                 </svg>
                 <div class="unread-badge" id="unreadBadge">0</div>
             </div>
-            <div class="feed-menu" onclick="openMenu()">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
+            <div class="feed-menu profile-btn" onclick="openProfile()" title="Профиль">
+                <img id="headerAvatar" src="images/girl.png" alt="Profile">
             </div>
         </div>
     </div>
@@ -541,6 +714,68 @@
         </div>
     </div>
 
+    <!-- ═══ ПРОФИЛЬ ═══ -->
+    <div class="profile-overlay" id="profileOverlay">
+        <div class="profile-header-bar">
+            <div class="profile-back-btn" onclick="closeProfile()">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </div>
+            <div class="profile-title-bar">👤 Профиль</div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-wrapper">
+                    <img id="profileAvatarImg" class="profile-avatar-img" src="images/girl.png" alt="Аватар">
+                    <div class="profile-avatar-edit" onclick="document.getElementById('profilePhotoInput').click()">
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                </div>
+                <input type="file" id="profilePhotoInput" class="profile-photo-input" accept="image/*" onchange="handleProfilePhoto(event)">
+            </div>
+
+            <div class="profile-field">
+                <label>Имя</label>
+                <input type="text" id="profileName" placeholder="Твоё имя" maxlength="32">
+            </div>
+
+            <div class="profile-field">
+                <label>Никнейм</label>
+                <input type="text" id="profileNickname" placeholder="@username">
+            </div>
+
+            <div class="profile-field">
+                <label>Возраст</label>
+                <input type="number" id="profileAge" placeholder="18" min="13" max="99">
+            </div>
+
+            <div class="profile-field">
+                <label>Пол</label>
+                <select id="profileGender" class="profile-select">
+                    <option value="male">Парень</option>
+                    <option value="female">Девушка</option>
+                </select>
+            </div>
+
+            <div class="profile-field">
+                <label>Кого ищу</label>
+                <select id="profileLookingFor" class="profile-select">
+                    <option value="male">Парней</option>
+                    <option value="female">Девушек</option>
+                    <option value="any">Без разницы</option>
+                </select>
+            </div>
+
+            <div class="profile-field">
+                <label>О себе</label>
+                <textarea id="profileBio" placeholder="Расскажи о себе..." maxlength="500"></textarea>
+            </div>
+
+            <button class="profile-save-btn" onclick="saveProfile()">💾 Сохранить</button>
+            <button class="profile-logout-btn" onclick="logout()">🚪 Выйти из аккаунта</button>
+        </div>
+    </div>
+
     <script>
         const API_URL = "https://backend-2tcl.onrender.com";
 
@@ -548,7 +783,6 @@
         let currentIndex = 0;
         let myProfile = null;
         let lastMatchedUser = null;
-        let currentLikesTab = "incoming";
 
         function getTelegramId() {
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
@@ -568,6 +802,9 @@
                 const saved = localStorage.getItem("emberUser");
                 if (!saved) { window.location.href = "index.html"; return null; }
                 myProfile = JSON.parse(saved);
+                if (myProfile.photo) {
+                    document.getElementById("headerAvatar").src = myProfile.photo;
+                }
                 return myProfile;
             } catch (e) {
                 window.location.href = "index.html";
@@ -716,7 +953,6 @@
         }
 
         function switchLikesTab(tab) {
-            currentLikesTab = tab;
             document.getElementById("tabIncoming").classList.toggle("active", tab === "incoming");
             document.getElementById("tabOutgoing").classList.toggle("active", tab === "outgoing");
             loadLikes(tab);
@@ -731,7 +967,6 @@
                 const res = await fetch(API_URL + endpoint + "?telegram_id=" + getTelegramId());
                 const data = await res.json();
 
-                // Обновляем счётчики
                 if (tab === "incoming") {
                     document.getElementById("tabIncomingCount").innerText = data.length;
                 } else {
@@ -751,7 +986,6 @@
 
                 content.innerHTML = data.map((u, idx) => {
                     if (tab === "incoming") {
-                        // Кто меня лайкнул — можно принять или отклонить
                         return `
                             <div class="like-card" style="animation-delay: ${idx * 0.05}s;">
                                 <img src="${u.photo || 'images/girl.png'}" class="like-avatar" onerror="this.src='images/girl.png'">
@@ -763,14 +997,13 @@
                                     <button class="like-btn like-btn-reject" onclick="rejectIncoming('${u.telegram_id}', this)">
                                         <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
                                     </button>
-                                    <button class="like-btn like-btn-accept" onclick="acceptIncoming('${u.telegram_id}', '${u.name}', '${u.age}', '${u.photo || ''}', this)">
+                                    <button class="like-btn like-btn-accept" onclick="acceptIncoming('${u.telegram_id}', this)">
                                         <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     </button>
                                 </div>
                             </div>
                         `;
                     } else {
-                        // Кого я лайкнул — можно отменить
                         const mutual = u.is_mutual ? '<span class="mutual-badge">💕 МЭТЧ</span>' : '';
                         return `
                             <div class="like-card" style="animation-delay: ${idx * 0.05}s;">
@@ -800,8 +1033,7 @@
             }
         }
 
-        // Принять лайк (поставить ответный)
-        async function acceptIncoming(userId, userName, userAge, userPhoto, btn) {
+        async function acceptIncoming(userId, btn) {
             if (navigator.vibrate) navigator.vibrate(30);
             btn.style.transform = "scale(0.9)";
 
@@ -817,7 +1049,6 @@
                 });
                 const result = await res.json();
 
-                // Удаляем карточку из списка
                 btn.closest(".like-card").style.opacity = "0";
                 btn.closest(".like-card").style.transform = "translateX(100px)";
                 setTimeout(() => btn.closest(".like-card").remove(), 300);
@@ -835,7 +1066,6 @@
             }
         }
 
-        // Отклонить лайк (дизлайк)
         async function rejectIncoming(userId, btn) {
             if (navigator.vibrate) navigator.vibrate(10);
             btn.style.transform = "scale(0.9)";
@@ -859,7 +1089,6 @@
             }
         }
 
-        // Отменить свой лайк
         async function cancelOutgoing(userId, btn) {
             if (!confirm("Отменить лайк?")) return;
             if (navigator.vibrate) navigator.vibrate(10);
@@ -883,7 +1112,128 @@
             }
         }
 
-        // Бейдж лайков
+        // ═══ ПРОФИЛЬ ═══
+        let profileData = null;
+
+        async function openProfile() {
+            document.getElementById("profileOverlay").classList.add("active");
+            await loadProfileData();
+        }
+
+        function closeProfile() {
+            document.getElementById("profileOverlay").classList.remove("active");
+        }
+
+        async function loadProfileData() {
+            try {
+                const res = await fetch(API_URL + "/api/profile?telegram_id=" + getTelegramId());
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                profileData = await res.json();
+
+                document.getElementById("profileName").value = profileData.name || "";
+                document.getElementById("profileNickname").value = profileData.nickname || "";
+                document.getElementById("profileAge").value = profileData.age || "";
+                document.getElementById("profileGender").value = profileData.gender || "male";
+                document.getElementById("profileLookingFor").value = profileData.looking_for || "any";
+                document.getElementById("profileBio").value = profileData.bio || "";
+                document.getElementById("profileAvatarImg").src = profileData.photo || "images/girl.png";
+                document.getElementById("headerAvatar").src = profileData.photo || "images/girl.png";
+            } catch (e) {
+                console.error("Ошибка загрузки профиля:", e);
+                if (myProfile) {
+                    document.getElementById("profileName").value = myProfile.name || "";
+                    document.getElementById("profileAge").value = myProfile.age || "";
+                    document.getElementById("profileAvatarImg").src = myProfile.photo || "images/girl.png";
+                }
+            }
+        }
+
+        function handleProfilePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Файл слишком большой (макс 5 МБ)");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById("profileAvatarImg").src = e.target.result;
+                if (!profileData) profileData = {};
+                profileData.photo = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById("profileName").value.trim();
+            const age = parseInt(document.getElementById("profileAge").value);
+
+            if (name.length < 2) {
+                alert("Имя должно быть от 2 символов");
+                return;
+            }
+            if (!age || age < 13) {
+                alert("Минимальный возраст — 13 лет");
+                return;
+            }
+
+            const data = {
+                telegram_id: getTelegramId(),
+                name: name,
+                nickname: document.getElementById("profileNickname").value.trim() || null,
+                age: age,
+                gender: document.getElementById("profileGender").value,
+                looking_for: document.getElementById("profileLookingFor").value,
+                bio: document.getElementById("profileBio").value.trim() || null,
+                photo: profileData?.photo || null
+            };
+
+            try {
+                const res = await fetch(API_URL + "/api/profile", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    const localData = JSON.parse(localStorage.getItem("emberUser") || "{}");
+                    localData.name = data.name;
+                    localData.age = data.age;
+                    localData.nickname = data.nickname;
+                    localData.bio = data.bio;
+                    if (data.photo) localData.photo = data.photo;
+                    localStorage.setItem("emberUser", JSON.stringify(localData));
+
+                    if (data.photo) {
+                        document.getElementById("headerAvatar").src = data.photo;
+                    }
+
+                    if (navigator.vibrate) navigator.vibrate(30);
+
+                    const btn = document.querySelector(".profile-save-btn");
+                    const originalText = btn.innerText;
+                    btn.innerText = "✅ Сохранено";
+                    setTimeout(() => { btn.innerText = originalText; }, 1500);
+                } else {
+                    alert("Ошибка: " + (result.error || "не удалось сохранить"));
+                }
+            } catch (e) {
+                console.error("Ошибка сохранения:", e);
+                alert("Не удалось сохранить профиль");
+            }
+        }
+
+        function logout() {
+            if (confirm("Выйти из аккаунта? Анкета удалится из Ember.")) {
+                localStorage.removeItem("emberUser");
+                localStorage.removeItem("emberRegistered");
+                localStorage.removeItem("emberTgId");
+                window.location.href = "index.html";
+            }
+        }
+
+        // Бейджи
         async function checkLikesBadge() {
             try {
                 const res = await fetch(API_URL + "/api/likes/incoming?telegram_id=" + getTelegramId());
@@ -924,8 +1274,8 @@
         let startX = 0;
         document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
         document.addEventListener("touchend", e => {
-            // Игнорируем свайпы в панели лайков
             if (document.getElementById("likesView").classList.contains("active")) return;
+            if (document.getElementById("profileOverlay").classList.contains("active")) return;
             const diff = e.changedTouches[0].clientX - startX;
             if (diff > 80) swipe("right");
             if (diff < -80) swipe("left");
@@ -938,4 +1288,4 @@
         setInterval(checkLikesBadge, 15000);
     </script>
 </body>
-</html>
+    </html>
