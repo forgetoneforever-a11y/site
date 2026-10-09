@@ -30,7 +30,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Шапка */
         .feed-header {
             position: fixed; top: 0; left: 0; right: 0;
             padding: 16px 20px;
@@ -165,7 +164,6 @@
             border: 1px solid rgba(217, 56, 94, 0.3);
         }
 
-        /* Штампы */
         .card-stamp {
             position: absolute;
             top: 40px;
@@ -206,10 +204,10 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
 
-        /* Кнопки */
+        /* Кнопки действий */
         .actions {
             position: fixed; bottom: 24px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 24px; z-index: 10;
+            display: flex; justify-content: center; gap: 18px; z-index: 10;
         }
 
         .action-btn {
@@ -218,10 +216,36 @@
             cursor: pointer;
             transition: transform 0.2s;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            flex-shrink: 0;
         }
         .action-btn svg { width: 28px; height: 28px; }
         .action-btn:hover { transform: translateY(-4px) scale(1.05); }
         .action-btn:active { transform: scale(0.92); }
+
+        /* Кнопка Обновить */
+        .btn-refresh {
+            background: rgba(30, 20, 60, 0.9);
+            color: #fff;
+            border: 2px solid rgba(120, 100, 220, 0.4);
+            width: 54px;
+            height: 54px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+        }
+
+        .btn-refresh svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-refresh:hover {
+            border-color: rgba(123, 47, 255, 0.8);
+            box-shadow: 0 8px 25px rgba(123, 47, 255, 0.5);
+        }
+
+        .btn-refresh.spinning svg {
+            transform: rotate(360deg);
+        }
 
         .btn-dislike {
             background: rgba(30, 20, 60, 0.9);
@@ -531,7 +555,6 @@
             contain: layout style paint;
         }
 
-        /* Баннер профиля */
         .profile-banner-wrap {
             position: relative;
             width: 100%;
@@ -599,7 +622,6 @@
 
         .profile-banner-file { display: none; }
 
-        /* Счётчики лайков/дизлайков */
         .profile-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -882,6 +904,12 @@
     </div>
 
     <div class="actions" id="actions" style="display:none;">
+        <button class="action-btn btn-refresh" onclick="refreshProfiles()" title="Обновить анкеты">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 4v6h-6M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+        </button>
         <button class="action-btn btn-dislike" onclick="swipe('left')">👎</button>
         <button class="action-btn btn-like" onclick="swipe('right')">
             <svg viewBox="0 0 24 24" fill="#fff" stroke="none">
@@ -938,7 +966,6 @@
         </div>
 
         <div class="profile-content">
-            <!-- Баннер над аватаркой -->
             <div class="profile-banner-wrap" onclick="document.getElementById('bannerInput').click()">
                 <img id="profileBannerImg" class="profile-banner-img" style="display:none;" alt="Баннер">
                 <div class="profile-banner-placeholder" id="bannerPlaceholder">
@@ -955,7 +982,6 @@
             </div>
             <input type="file" id="bannerInput" class="profile-banner-file" accept="image/*" onchange="handleBannerPhoto(event)">
 
-            <!-- Аватарка -->
             <div class="profile-avatar-section">
                 <div class="profile-avatar-wrapper">
                     <img id="profileAvatarImg" class="profile-avatar-img" src="images/girl.png" alt="Аватар">
@@ -966,7 +992,6 @@
                 <input type="file" id="profilePhotoInput" class="profile-photo-input" accept="image/*" onchange="handleProfilePhoto(event)">
             </div>
 
-            <!-- Счётчики -->
             <div class="profile-stats">
                 <div class="profile-stat">
                     <div class="profile-stat-value" id="myLikes">0</div>
@@ -1085,19 +1110,22 @@
 
         async function loadProfiles() {
             const user = checkAuth();
-            if (!user) return;
+            if (!user) return 0;
 
             try {
                 const params = new URLSearchParams({
                     telegram_id: getTelegramId(),
                     looking_for: user.lookingFor || "any",
                     min_age: user.minAge || 13,
-                    max_age: user.maxAge || 99
+                    max_age: user.maxAge || 99,
+                    _t: Date.now()
                 });
                 const res = await fetch(API_URL + "/api/recommendations?" + params.toString());
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 profiles = await res.json();
+                currentIndex = 0;
                 renderCard();
+                return profiles.length;
             } catch (e) {
                 console.error("❌ Ошибка загрузки:", e);
                 document.getElementById("cards").innerHTML = `
@@ -1105,6 +1133,48 @@
                         <div class="empty-icon">⚠️</div>
                         <div class="empty-title">Не удалось загрузить</div>
                         <div>Проверь интернет или попробуй позже</div>
+                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
+                            🔄 Попробовать снова
+                        </button>
+                    </div>
+                `;
+                return 0;
+            }
+        }
+
+        // 🔄 Обновить анкеты
+        async function refreshProfiles() {
+            if (navigator.vibrate) navigator.vibrate(15);
+
+            const btn = document.querySelector(".btn-refresh");
+            if (btn) btn.classList.add("spinning");
+            setTimeout(() => {
+                if (btn) btn.classList.remove("spinning");
+            }, 700);
+
+            const container = document.getElementById("cards");
+            container.innerHTML = `
+                <div class="loading">
+                    <div style="text-align:center;">
+                        <div style="font-size:48px;margin-bottom:12px;">🔄</div>
+                        <div>Обновляем анкеты...</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById("actions").style.display = "none";
+
+            const count = await loadProfiles();
+
+            if (count === 0) {
+                const container = document.getElementById("cards");
+                container.innerHTML = `
+                    <div class="empty">
+                        <div class="empty-icon">🔍</div>
+                        <div class="empty-title">Новых анкет нет</div>
+                        <div>Заходи позже — появятся новые пользователи</div>
+                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
+                            🔄 Обновить ещё раз
+                        </button>
                     </div>
                 `;
             }
@@ -1120,6 +1190,9 @@
                         <div class="empty-icon">🔥</div>
                         <div class="empty-title">Пока никого нет</div>
                         <div>Заходи позже — появятся новые</div>
+                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
+                            🔄 Обновить
+                        </button>
                     </div>
                 `;
                 document.getElementById("actions").style.display = "none";
@@ -1133,7 +1206,10 @@
                     <div class="empty">
                         <div class="empty-icon">✨</div>
                         <div class="empty-title">Анкеты закончились</div>
-                        <div>Заходи позже</div>
+                        <div>Попробуй обновить — могут появиться новые</div>
+                        <button class="btn-next" onclick="refreshProfiles()" style="max-width:240px;margin-top:16px;">
+                            🔄 Обновить
+                        </button>
                     </div>
                 `;
                 document.getElementById("actions").style.display = "none";
@@ -1537,11 +1613,9 @@
                 document.getElementById("profileAvatarImg").src = profileData.photo || "images/girl.png";
                 document.getElementById("headerAvatar").src = profileData.photo || "images/girl.png";
 
-                // Статистика
                 document.getElementById("myLikes").innerText = profileData.likes_received || 0;
                 document.getElementById("myDislikes").innerText = profileData.dislikes_received || 0;
 
-                // Баннер
                 if (profileData.banner && profileData.banner.startsWith("data:image")) {
                     document.getElementById("profileBannerImg").src = profileData.banner;
                     document.getElementById("profileBannerImg").style.display = "block";
