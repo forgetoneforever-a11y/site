@@ -165,7 +165,7 @@
             border: 1px solid rgba(217, 56, 94, 0.3);
         }
 
-        /* Штампы LIKE/NOPE */
+        /* Штампы */
         .card-stamp {
             position: absolute;
             top: 40px;
@@ -194,9 +194,6 @@
             transform: rotate(15deg) scale(0.8);
             box-shadow: 0 0 20px rgba(217, 56, 94, 0.6);
         }
-        .card-stamp-nope.visible {
-            transform: rotate(15deg) scale(1);
-        }
 
         .card.swipe-left {
             transform: translateX(-150%) rotate(-30deg);
@@ -209,7 +206,7 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
 
-        /* Кнопки действий */
+        /* Кнопки */
         .actions {
             position: fixed; bottom: 24px; left: 0; right: 0;
             display: flex; justify-content: center; gap: 24px; z-index: 10;
@@ -534,7 +531,75 @@
             contain: layout style paint;
         }
 
-        /* Счётчики в профиле */
+        /* Баннер профиля */
+        .profile-banner-wrap {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2a1a4a, #1a1030);
+            border: 2px solid rgba(120, 100, 220, 0.3);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .profile-banner-wrap:hover {
+            border-color: rgba(217, 56, 94, 0.6);
+        }
+
+        .profile-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .profile-banner-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #9a92c4;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 20px;
+        }
+        .profile-banner-placeholder svg {
+            width: 32px;
+            height: 32px;
+            stroke: #ff5c8a;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .profile-banner-edit {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(10, 6, 24, 0.85);
+            border: 1.5px solid rgba(217, 56, 94, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .profile-banner-edit svg {
+            width: 16px; height: 16px;
+            stroke: #ff5c8a;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .profile-banner-file { display: none; }
+
+        /* Счётчики лайков/дизлайков */
         .profile-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -641,46 +706,6 @@
             background: #1a1030; color: #fff;
         }
 
-        /* Баннеры */
-        .banner-picker {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-        .banner-option {
-            aspect-ratio: 1;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 2px solid rgba(120, 100, 220, 0.3);
-            transition: transform 0.2s, border-color 0.2s;
-            background: linear-gradient(135deg, #1a1030, #2a1a4a);
-            position: relative;
-            overflow: hidden;
-        }
-        .banner-option:hover {
-            transform: scale(1.05);
-            border-color: rgba(217, 56, 94, 0.6);
-        }
-        .banner-option.active {
-            border-color: #d9385e;
-            box-shadow: 0 0 15px rgba(217, 56, 94, 0.5);
-        }
-        .banner-option.active::after {
-            content: '✓';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 22px;
-            font-weight: 900;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-        }
-
-        .banner-purple { background: linear-gradient(135deg, #7b2fff, #4a2bff); }
-        .banner-pink { background: linear-gradient(135deg, #ff5c8a, #d9385e); }
-        .banner-blue { background: linear-gradient(135deg, #4a90e2, #7b2fff); }
-        .banner-fire { background: linear-gradient(135deg, #ff6b35, #d9385e, #7b2fff); }
-
         .profile-save-btn {
             width: 100%; padding: 16px; border: none;
             border-radius: 14px;
@@ -728,9 +753,7 @@
             background: rgba(217, 56, 94, 0.2);
             border-color: #d9385e;
         }
-        .profile-delete-btn:active {
-            transform: scale(0.98);
-        }
+        .profile-delete-btn:active { transform: scale(0.98); }
         .profile-delete-btn svg {
             width: 16px;
             height: 16px;
@@ -809,7 +832,9 @@
         .like-card,
         .match-photo,
         .like-avatar,
-        .avatar {
+        .avatar,
+        .profile-banner-wrap,
+        .profile-avatar-img {
             transform: translateZ(0);
             backface-visibility: hidden;
         }
@@ -913,6 +938,35 @@
         </div>
 
         <div class="profile-content">
+            <!-- Баннер над аватаркой -->
+            <div class="profile-banner-wrap" onclick="document.getElementById('bannerInput').click()">
+                <img id="profileBannerImg" class="profile-banner-img" style="display:none;" alt="Баннер">
+                <div class="profile-banner-placeholder" id="bannerPlaceholder">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>Нажми, чтобы загрузить баннер</span>
+                </div>
+                <div class="profile-banner-edit">
+                    <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+            </div>
+            <input type="file" id="bannerInput" class="profile-banner-file" accept="image/*" onchange="handleBannerPhoto(event)">
+
+            <!-- Аватарка -->
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-wrapper">
+                    <img id="profileAvatarImg" class="profile-avatar-img" src="images/girl.png" alt="Аватар">
+                    <div class="profile-avatar-edit" onclick="document.getElementById('profilePhotoInput').click()">
+                        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                </div>
+                <input type="file" id="profilePhotoInput" class="profile-photo-input" accept="image/*" onchange="handleProfilePhoto(event)">
+            </div>
+
+            <!-- Счётчики -->
             <div class="profile-stats">
                 <div class="profile-stat">
                     <div class="profile-stat-value" id="myLikes">0</div>
@@ -922,16 +976,6 @@
                     <div class="profile-stat-value" id="myDislikes">0</div>
                     <div class="profile-stat-label">👎 Дизлайков</div>
                 </div>
-            </div>
-
-            <div class="profile-avatar-section">
-                <div class="profile-avatar-wrapper">
-                    <img id="profileAvatarImg" class="profile-avatar-img" src="images/girl.png" alt="Аватар">
-                    <div class="profile-avatar-edit" onclick="document.getElementById('profilePhotoInput').click()">
-                        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    </div>
-                </div>
-                <input type="file" id="profilePhotoInput" class="profile-photo-input" accept="image/*" onchange="handleProfilePhoto(event)">
             </div>
 
             <div class="profile-field">
@@ -976,17 +1020,6 @@
                 <textarea id="profileBio" placeholder="Расскажи о себе..." maxlength="500"></textarea>
             </div>
 
-            <div class="profile-field">
-                <label>Баннер профиля</label>
-                <div class="banner-picker" id="bannerPicker">
-                    <div class="banner-option" data-banner="default" onclick="selectBanner('default')"></div>
-                    <div class="banner-option banner-purple" data-banner="purple" onclick="selectBanner('purple')"></div>
-                    <div class="banner-option banner-pink" data-banner="pink" onclick="selectBanner('pink')"></div>
-                    <div class="banner-option banner-blue" data-banner="blue" onclick="selectBanner('blue')"></div>
-                    <div class="banner-option banner-fire" data-banner="fire" onclick="selectBanner('fire')"></div>
-                </div>
-            </div>
-
             <button class="profile-save-btn" onclick="saveProfile()">💾 Сохранить</button>
             <button class="profile-logout-btn" onclick="logout()">🚪 Выйти из аккаунта</button>
             <button class="profile-delete-btn" onclick="openDeleteModal()">
@@ -1021,7 +1054,6 @@
         let currentIndex = 0;
         let myProfile = null;
         let lastMatchedUser = null;
-        let selectedBanner = "default";
 
         function getTelegramId() {
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
@@ -1510,7 +1542,14 @@
                 document.getElementById("myDislikes").innerText = profileData.dislikes_received || 0;
 
                 // Баннер
-                selectBanner(profileData.banner || "default", false);
+                if (profileData.banner && profileData.banner.startsWith("data:image")) {
+                    document.getElementById("profileBannerImg").src = profileData.banner;
+                    document.getElementById("profileBannerImg").style.display = "block";
+                    document.getElementById("bannerPlaceholder").style.display = "none";
+                } else {
+                    document.getElementById("profileBannerImg").style.display = "none";
+                    document.getElementById("bannerPlaceholder").style.display = "flex";
+                }
             } catch (e) {
                 console.error("Ошибка загрузки профиля:", e);
                 if (myProfile) {
@@ -1537,12 +1576,24 @@
             reader.readAsDataURL(file);
         }
 
-        function selectBanner(banner, animate = true) {
-            selectedBanner = banner;
-            document.querySelectorAll(".banner-option").forEach(el => {
-                el.classList.toggle("active", el.dataset.banner === banner);
-            });
-            if (animate && navigator.vibrate) navigator.vibrate(10);
+        function handleBannerPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Файл слишком большой (макс 5 МБ)");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById("profileBannerImg");
+                img.src = e.target.result;
+                img.style.display = "block";
+                document.getElementById("bannerPlaceholder").style.display = "none";
+                if (!profileData) profileData = {};
+                profileData.banner = e.target.result;
+                if (navigator.vibrate) navigator.vibrate(10);
+            };
+            reader.readAsDataURL(file);
         }
 
         async function saveProfile() {
@@ -1568,7 +1619,7 @@
                 looking_for: document.getElementById("profileLookingFor").value,
                 bio: document.getElementById("profileBio").value.trim() || null,
                 photo: profileData?.photo || null,
-                banner: selectedBanner || "default"
+                banner: profileData?.banner || null
             };
 
             try {
@@ -1709,4 +1760,4 @@
         }, 20000);
     </script>
 </body>
-    </html>
+</html>
