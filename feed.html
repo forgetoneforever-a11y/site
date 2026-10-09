@@ -204,9 +204,12 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
 
+        /* Блок кнопок */
         .actions {
             position: fixed; bottom: 24px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 18px; z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+            gap: 18px; z-index: 10;
+            padding: 0 20px;
         }
 
         .action-btn {
@@ -220,18 +223,21 @@
         .action-btn:hover { transform: translateY(-4px) scale(1.05); }
         .action-btn:active { transform: scale(0.92); }
 
+        /* Кнопка Обновить — слева, меньше */
         .btn-refresh {
+            position: absolute;
+            left: 20px;
+            width: 46px;
+            height: 46px;
             background: rgba(30, 20, 60, 0.9);
             color: #fff;
             border: 2px solid rgba(120, 100, 220, 0.4);
-            width: 54px;
-            height: 54px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.35);
         }
 
         .btn-refresh svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -244,7 +250,7 @@
             transform: rotate(360deg);
         }
 
-        /* ЛАЙК — контурное сердце */
+        /* Лайк — контурное сердце */
         .btn-like {
             background: rgba(30, 20, 60, 0.9);
             color: #fff;
@@ -266,7 +272,7 @@
             stroke: #a855f7;
         }
 
-        /* ДИЗЛАЙК — контурный палец вниз */
+        /* Дизлайк — контурный палец вниз */
         .btn-dislike {
             background: rgba(30, 20, 60, 0.9);
             color: #fff;
