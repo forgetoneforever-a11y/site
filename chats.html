@@ -328,9 +328,37 @@
             contain: layout style paint;
         }
 
+        /* Баннер собеседника */
+        .user-profile-banner-wrap {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2a1a4a, #1a1030);
+            border: 2px solid rgba(120, 100, 220, 0.3);
+            display: none;
+            margin-bottom: -90px;
+        }
+        .user-profile-banner-wrap.visible {
+            display: block;
+        }
+        .user-profile-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .user-profile-avatar-wrap {
             display: flex; flex-direction: column;
             align-items: center; gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .user-profile-avatar-wrap.with-banner .user-profile-avatar {
+            border: 4px solid #0a0618;
+            box-shadow: 0 0 0 3px rgba(217, 56, 94, 0.6), 0 0 30px rgba(217, 56, 94, 0.5);
         }
 
         .user-profile-avatar {
@@ -415,7 +443,8 @@
         .chat-back,
         .chat-avatar,
         .partner-avatar,
-        .user-profile-avatar {
+        .user-profile-avatar,
+        .user-profile-banner-wrap {
             transform: translateZ(0);
             backface-visibility: hidden;
         }
@@ -489,16 +518,24 @@
         </div>
 
         <div class="user-profile-content">
-            <div class="user-profile-avatar-wrap">
+            <!-- Баннер собеседника -->
+            <div class="user-profile-banner-wrap" id="upBannerWrap">
+                <img id="upBanner" class="user-profile-banner-img" alt="">
+            </div>
+
+            <!-- Аватарка -->
+            <div class="user-profile-avatar-wrap" id="upAvatarWrap">
                 <img id="upAvatar" class="user-profile-avatar" src="images/girl.png" alt="">
                 <div class="user-profile-name" id="upName">Имя, <span>возраст</span></div>
                 <div class="user-profile-city" id="upCity"></div>
             </div>
 
+            <!-- О себе -->
             <div class="user-profile-bio" id="upBio">
                 Нет описания
             </div>
 
+            <!-- Действия -->
             <div class="user-profile-actions">
                 <button class="user-profile-action-btn user-profile-action-chat" onclick="closeUserProfile()">
                     <svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -570,8 +607,19 @@
                     const previewText = unread[m.telegram_id] ? "Новое сообщение..." : "Нажми, чтобы открыть чат";
                     const bio = (m.bio || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const city = (m.city || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
                     return `
-                        <div class="chat-item" onclick="openChat('${m.telegram_id}', '${m.name}', '${m.age}', '${m.photo || ''}', '${bio}', '${city}')">
+                        <div class="chat-item"
+                             data-banner="${m.banner || ''}"
+                             onclick="openChat(
+                                '${m.telegram_id}',
+                                '${m.name}',
+                                '${m.age}',
+                                '${m.photo || ''}',
+                                '${bio}',
+                                '${city}',
+                                this.dataset.banner
+                             )">
                             <div class="chat-avatar-wrapper">
                                 <img src="${m.photo || 'images/girl.png'}" class="chat-avatar" onerror="this.src='images/girl.png'">
                                 <div class="online-dot"></div>
@@ -596,14 +644,15 @@
             }
         }
 
-        function openChat(partnerId, partnerName, partnerAge, partnerPhoto, partnerBio, partnerCity) {
+        function openChat(partnerId, partnerName, partnerAge, partnerPhoto, partnerBio, partnerCity, partnerBanner) {
             currentPartner = {
                 id: partnerId,
                 name: partnerName,
                 age: partnerAge,
                 photo: partnerPhoto,
                 bio: partnerBio || "",
-                city: partnerCity || ""
+                city: partnerCity || "",
+                banner: partnerBanner || ""
             };
             lastMessageId = 0;
 
@@ -720,9 +769,22 @@
         function openUserProfile() {
             if (!currentPartner) return;
 
+            // Баннер
+            const bannerWrap = document.getElementById("upBannerWrap");
+            const avatarWrap = document.getElementById("upAvatarWrap");
+
+            if (currentPartner.banner && currentPartner.banner.startsWith("data:image")) {
+                document.getElementById("upBanner").src = currentPartner.banner;
+                bannerWrap.classList.add("visible");
+                avatarWrap.classList.add("with-banner");
+            } else {
+                bannerWrap.classList.remove("visible");
+                avatarWrap.classList.remove("with-banner");
+            }
+
             document.getElementById("upAvatar").src = currentPartner.photo || "images/girl.png";
             document.getElementById("upName").innerHTML = `${currentPartner.name}, <span>${currentPartner.age}</span>`;
-            
+
             const cityEl = document.getElementById("upCity");
             if (currentPartner.city) {
                 cityEl.innerText = `📍 ${currentPartner.city}`;
@@ -730,7 +792,7 @@
             } else {
                 cityEl.classList.remove("visible");
             }
-            
+
             document.getElementById("upBio").innerText = currentPartner.bio || "Нет описания";
 
             document.getElementById("userProfileOverlay").classList.add("active");
@@ -777,7 +839,15 @@
                         const matches = await res.json();
                         const partner = matches.find(m => String(m.telegram_id) === String(openId));
                         if (partner) {
-                            openChat(partner.telegram_id, partner.name, partner.age, partner.photo, partner.bio, partner.city);
+                            openChat(
+                                partner.telegram_id,
+                                partner.name,
+                                partner.age,
+                                partner.photo,
+                                partner.bio,
+                                partner.city,
+                                partner.banner
+                            );
                         }
                     } catch (e) { console.warn(e); }
                 }, 300);
