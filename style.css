@@ -2,24 +2,21 @@
 
 :root {
     --bg: #0a0618;
-    --card: rgba(30, 20, 60, 0.55);
-    --card-hover: rgba(45, 30, 85, 0.7);
-    --border: rgba(120, 100, 220, 0.3);
+    --card: rgba(30, 20, 60, 0.65);
+    --card-hover: rgba(45, 30, 85, 0.75);
+    --border: rgba(120, 100, 220, 0.35);
     --text: #ffffff;
     --muted: #9a92c4;
     --accent: #d9385e;
     --accent-light: #ff5c8a;
     --accent-dark: #a02040;
-    --blue: #4a90e2;
-    --green: #a4d165;
     --purple: #7b2fff;
     --violet: #4a2bff;
+    --blue: #4a90e2;
+    --green: #a4d165;
 }
 
-html, body {
-    height: 100%;
-    overflow-x: hidden;
-}
+html, body { height: 100%; overflow-x: hidden; }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
@@ -29,53 +26,31 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background: #0a0618;
-    background-image:
-        radial-gradient(circle at 15% 15%, rgba(123, 47, 255, 0.45), transparent 45%),
-        radial-gradient(circle at 85% 20%, rgba(74, 43, 255, 0.4), transparent 45%),
-        radial-gradient(circle at 50% 85%, rgba(217, 56, 94, 0.35), transparent 50%),
-        radial-gradient(circle at 80% 90%, rgba(100, 60, 255, 0.3), transparent 45%),
+    /* Убрали body::before с анимацией — заменили на статичный градиент */
+    background:
+        radial-gradient(circle at 15% 15%, rgba(123, 47, 255, 0.35), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(217, 56, 94, 0.3), transparent 45%),
         linear-gradient(135deg, #0a0618 0%, #150a2e 50%, #0a0618 100%);
     background-attachment: fixed;
-    background-size: cover;
-    position: relative;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(123, 47, 255, 0.15), transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(74, 43, 255, 0.15), transparent 40%);
-    pointer-events: none;
-    z-index: 0;
-    animation: bgShift 20s ease-in-out infinite alternate;
-}
+/* Убрали анимацию bgShift — она тормозила */
 
-@keyframes bgShift {
-    0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.15) translate(-2%, -2%); }
-}
-
-/* Прогресс-бар */
 .progress {
-    position: fixed;
-    top: 0; left: 0; right: 0;
+    position: fixed; top: 0; left: 0; right: 0;
     height: 3px;
     background: rgba(255, 255, 255, 0.05);
     z-index: 100;
 }
-
 .progress-bar {
     height: 100%;
     background: linear-gradient(90deg, var(--purple), var(--violet), var(--accent-light));
     width: 16%;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 12px var(--purple), 0 0 20px rgba(123, 47, 255, 0.6);
+    /* Убрали box-shadow с 2 слоями */
 }
 
-/* Мини-логотип в углу (увеличенный) */
+/* Мини-логотип — убрали backdrop-filter и glow-анимацию */
 .brand-mini {
     position: fixed;
     top: 16px;
@@ -85,16 +60,10 @@ body::before {
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid rgba(217, 56, 94, 0.6);
-    box-shadow:
-        0 0 0 6px rgba(217, 56, 94, 0.15),
-        0 0 30px rgba(217, 56, 94, 0.6),
-        0 0 60px rgba(123, 47, 255, 0.4),
-        inset 0 0 15px rgba(217, 56, 94, 0.25);
+    /* Оставили только один box-shadow вместо 4 */
+    box-shadow: 0 0 30px rgba(217, 56, 94, 0.5);
     z-index: 50;
     background: var(--card);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    animation: glowMini 3s ease-in-out infinite;
     transition: transform 0.3s;
 }
 
@@ -102,24 +71,6 @@ body::before {
     transform: scale(1.1) rotate(5deg);
 }
 
-@keyframes glowMini {
-    0%, 100% {
-        box-shadow:
-            0 0 0 6px rgba(217, 56, 94, 0.15),
-            0 0 30px rgba(217, 56, 94, 0.6),
-            0 0 60px rgba(123, 47, 255, 0.4),
-            inset 0 0 15px rgba(217, 56, 94, 0.25);
-    }
-    50% {
-        box-shadow:
-            0 0 0 8px rgba(217, 56, 94, 0.25),
-            0 0 40px rgba(217, 56, 94, 0.9),
-            0 0 80px rgba(123, 47, 255, 0.6),
-            inset 0 0 20px rgba(217, 56, 94, 0.4);
-    }
-}
-
-/* Основной контейнер */
 .app {
     width: 100%;
     max-width: 420px;
@@ -127,23 +78,23 @@ body::before {
     z-index: 1;
 }
 
-/* Экраны */
 .screen {
     display: none;
     width: 100%;
-    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .screen.active {
     display: block;
+    /* Упростили анимацию входа */
+    animation: fadeIn 0.3s;
 }
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Круглый аватар */
+/* Аватар — убрали анимации float и glowAvatar (постоянные перерисовки) */
 .avatar-wrapper {
     display: flex;
     justify-content: center;
@@ -160,13 +111,8 @@ body::before {
     object-position: center top;
     background: linear-gradient(135deg, var(--accent), var(--purple));
     border: 3px solid rgba(217, 56, 94, 0.6);
-    box-shadow:
-        0 0 0 8px rgba(217, 56, 94, 0.12),
-        0 0 30px rgba(217, 56, 94, 0.6),
-        0 0 60px rgba(123, 47, 255, 0.5),
-        0 15px 50px rgba(217, 56, 94, 0.4),
-        inset 0 0 20px rgba(217, 56, 94, 0.3);
-    animation: float 4s ease-in-out infinite, glowAvatar 3s ease-in-out infinite;
+    /* Оставили 2 слоя свечения вместо 5 */
+    box-shadow: 0 0 40px rgba(217, 56, 94, 0.5), 0 0 80px rgba(123, 47, 255, 0.3);
     position: relative;
     z-index: 2;
     transition: transform 0.3s;
@@ -176,52 +122,10 @@ body::before {
     transform: scale(1.05);
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
+/* Убрали .avatar-wrapper::before с пульсирующим ореолом */
+/* Убрали @keyframes float и @keyframes glowAvatar */
+/* Убрали @keyframes pulseOrb */
 
-@keyframes glowAvatar {
-    0%, 100% {
-        box-shadow:
-            0 0 0 8px rgba(217, 56, 94, 0.12),
-            0 0 30px rgba(217, 56, 94, 0.6),
-            0 0 60px rgba(123, 47, 255, 0.5),
-            0 15px 50px rgba(217, 56, 94, 0.4),
-            inset 0 0 20px rgba(217, 56, 94, 0.3);
-    }
-    50% {
-        box-shadow:
-            0 0 0 12px rgba(217, 56, 94, 0.18),
-            0 0 40px rgba(217, 56, 94, 0.9),
-            0 0 80px rgba(123, 47, 255, 0.7),
-            0 20px 60px rgba(217, 56, 94, 0.6),
-            inset 0 0 25px rgba(217, 56, 94, 0.5);
-    }
-}
-
-.avatar-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(123, 47, 255, 0.4) 0%, rgba(217, 56, 94, 0.2) 40%, transparent 70%);
-    filter: blur(20px);
-    animation: pulseOrb 3s ease-in-out infinite;
-    z-index: 1;
-    pointer-events: none;
-}
-
-@keyframes pulseOrb {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
-}
-
-/* Заголовки */
 h1 {
     font-size: 26px;
     font-weight: 700;
@@ -247,12 +151,10 @@ label {
     font-weight: 600;
 }
 
-/* Поля ввода — стекло */
+/* Поля ввода — убрали backdrop-filter: blur */
 input[type="text"], textarea {
     width: 100%;
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     border-radius: 14px;
     padding: 16px 18px;
@@ -260,18 +162,16 @@ input[type="text"], textarea {
     font-size: 16px;
     font-family: inherit;
     outline: none;
-    transition: all 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     resize: vertical;
 }
 
-input[type="text"]::placeholder, textarea::placeholder {
-    color: #6a6288;
-}
+input[type="text"]::placeholder, textarea::placeholder { color: #6a6288; }
 
 input[type="text"]:focus, textarea:focus {
     border-color: var(--accent);
-    background: rgba(45, 30, 85, 0.7);
-    box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 30px rgba(123, 47, 255, 0.3);
+    background: rgba(45, 30, 85, 0.75);
+    box-shadow: 0 0 20px rgba(217, 56, 94, 0.3);
 }
 
 @keyframes shake {
@@ -279,7 +179,6 @@ input[type="text"]:focus, textarea:focus {
     25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
-
 .shake { animation: shake 0.3s; }
 
 .hint {
@@ -290,9 +189,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .hint-box {
-    background: rgba(123, 47, 255, 0.12);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(123, 47, 255, 0.15);
     border: 1px solid rgba(150, 120, 255, 0.3);
     border-radius: 14px;
     padding: 14px 16px;
@@ -305,16 +202,10 @@ input[type="text"]:focus, textarea:focus {
     line-height: 1.5;
 }
 
-.hint-icon {
-    font-size: 18px;
-    flex-shrink: 0;
-}
+.hint-icon { font-size: 18px; flex-shrink: 0; }
+.hint-box b { color: var(--accent-light); }
 
-.hint-box b {
-    color: var(--accent-light);
-}
-
-/* Кнопки */
+/* Кнопки — убрали ::before с бликом */
 .btn-next, .btn-skip, .btn-back {
     border: none;
     border-radius: 14px;
@@ -322,7 +213,7 @@ input[type="text"]:focus, textarea:focus {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     font-family: inherit;
 }
 
@@ -330,43 +221,23 @@ input[type="text"]:focus, textarea:focus {
     flex: 1;
     background: linear-gradient(135deg, var(--purple), var(--accent));
     color: #fff;
-    box-shadow: 0 4px 25px rgba(123, 47, 255, 0.5), 0 0 40px rgba(217, 56, 94, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-next::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-}
-
-.btn-next:hover::before {
-    transform: translateX(100%);
+    box-shadow: 0 4px 20px rgba(123, 47, 255, 0.5);
 }
 
 .btn-next:hover, .btn-next:active {
     transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(123, 47, 255, 0.7), 0 0 50px rgba(217, 56, 94, 0.5);
+    box-shadow: 0 6px 25px rgba(123, 47, 255, 0.7);
 }
 
 .btn-back {
     width: 56px;
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     color: #fff;
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     font-size: 20px;
 }
 
-.btn-back:hover {
-    background: rgba(45, 30, 85, 0.7);
-    border-color: var(--accent);
-}
+.btn-back:hover { background: rgba(45, 30, 85, 0.75); }
 
 .btn-skip {
     width: 100%;
@@ -376,9 +247,7 @@ input[type="text"]:focus, textarea:focus {
     font-size: 14px;
 }
 
-.btn-skip:hover {
-    color: #fff;
-}
+.btn-skip:hover { color: #fff; }
 
 .btn-row {
     display: flex;
@@ -387,11 +256,9 @@ input[type="text"]:focus, textarea:focus {
     align-items: center;
 }
 
-.btn-row .btn-next {
-    margin-top: 0;
-}
+.btn-row .btn-next { margin-top: 0; }
 
-/* Языки со стеклом */
+/* Языки — убрали backdrop-filter */
 .lang-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -400,9 +267,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn {
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     border-radius: 14px;
     padding: 16px 12px;
@@ -410,7 +275,7 @@ input[type="text"]:focus, textarea:focus {
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s;
+    transition: all 0.2s;
     font-family: inherit;
     display: flex;
     align-items: center;
@@ -428,22 +293,19 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn:hover {
-    background: rgba(45, 30, 85, 0.7);
+    background: rgba(45, 30, 85, 0.75);
     border-color: rgba(150, 120, 255, 0.5);
-    transform: translateY(-1px);
 }
 
 .lang-btn.active {
-    background: linear-gradient(135deg, rgba(217, 56, 94, 0.3), rgba(123, 47, 255, 0.25));
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.4);
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(217, 56, 94, 0.5);
 }
 
-/* Карточки выбора — стекло */
+/* Карточки выбора — убрали backdrop-filter */
 .choice {
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     border-radius: 14px;
     padding: 16px 18px;
@@ -454,19 +316,18 @@ input[type="text"]:focus, textarea:focus {
     gap: 14px;
     font-size: 15px;
     font-weight: 500;
-    transition: all 0.25s;
+    transition: all 0.2s;
 }
 
 .choice:hover {
-    background: rgba(45, 30, 85, 0.7);
+    background: rgba(45, 30, 85, 0.75);
     border-color: rgba(150, 120, 255, 0.5);
-    transform: translateY(-1px);
 }
 
 .choice.selected {
     border-color: var(--accent);
     background: linear-gradient(135deg, rgba(217, 56, 94, 0.25), rgba(123, 47, 255, 0.2));
-    box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.12), 0 0 30px rgba(123, 47, 255, 0.3);
+    box-shadow: 0 0 20px rgba(217, 56, 94, 0.3);
 }
 
 .icon {
@@ -486,14 +347,12 @@ input[type="text"]:focus, textarea:focus {
 .icon.pink { background: var(--accent); }
 .icon.green { background: var(--green); }
 
-/* Слайдеры — стекло */
+/* Слайдеры — убрали backdrop-filter */
 .slider-row {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     border-radius: 14px;
     padding: 16px 18px;
@@ -501,9 +360,7 @@ input[type="text"]:focus, textarea:focus {
     transition: border-color 0.2s;
 }
 
-.slider-row:focus-within {
-    border-color: var(--accent);
-}
+.slider-row:focus-within { border-color: var(--accent); }
 
 .slider-value {
     min-width: 36px;
@@ -531,15 +388,13 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     background: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 15px rgba(217, 56, 94, 0.6);
+    /* Упростили тень */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     border: 3px solid var(--accent);
     transition: transform 0.2s;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.15);
-}
-
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 input[type="range"]::-moz-range-thumb {
     width: 22px;
     height: 22px;
@@ -549,31 +404,26 @@ input[type="range"]::-moz-range-thumb {
     border: 3px solid var(--accent);
 }
 
-/* Загрузка фото */
-.photo-upload {
-    margin-top: 10px;
-}
+/* Загрузка фото — убрали backdrop-filter */
+.photo-upload { margin-top: 10px; }
 
 .photo-box {
     display: block;
     width: 100%;
     aspect-ratio: 3 / 4;
     max-height: 360px;
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 2px dashed rgba(120, 100, 220, 0.4);
     border-radius: 20px;
     cursor: pointer;
     overflow: hidden;
     position: relative;
-    transition: all 0.3s;
+    transition: border-color 0.3s, background 0.3s;
 }
 
 .photo-box:hover {
     border-color: var(--accent);
-    background: rgba(45, 30, 85, 0.7);
-    box-shadow: 0 0 30px rgba(123, 47, 255, 0.3);
+    background: rgba(45, 30, 85, 0.75);
 }
 
 .photo-placeholder {
@@ -594,7 +444,6 @@ input[type="range"]::-moz-range-thumb {
     font-weight: 300;
     color: var(--accent-light);
     line-height: 1;
-    text-shadow: 0 0 20px rgba(217, 56, 94, 0.6);
 }
 
 .photo-preview {
@@ -605,11 +454,9 @@ input[type="range"]::-moz-range-thumb {
     inset: 0;
 }
 
-/* Результат */
+/* Результат — убрали backdrop-filter */
 .result-box {
-    background: rgba(30, 20, 60, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(30, 20, 60, 0.65);
     border: 1.5px solid rgba(120, 100, 220, 0.3);
     border-radius: 16px;
     padding: 20px;
@@ -618,22 +465,12 @@ input[type="range"]::-moz-range-thumb {
     line-height: 1.9;
 }
 
-.result-box p {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
+.result-box p { display: flex; justify-content: space-between; gap: 10px; }
+.result-box strong { color: var(--accent-light); font-weight: 600; }
 
-.result-box strong {
-    color: var(--accent-light);
-    font-weight: 600;
-}
-
-/* Адаптив */
 @media (max-width: 400px) {
     h1 { font-size: 22px; }
     .avatar { width: 150px; height: 150px; }
-    .avatar-wrapper::before { width: 180px; height: 180px; }
     .btn-next { padding: 16px; font-size: 15px; }
     .brand-mini { width: 60px; height: 60px; }
-}
+    }
