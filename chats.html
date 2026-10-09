@@ -20,7 +20,6 @@
             color: #fff;
         }
 
-        /* Частицы статичные */
         .bg-particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
         .bg-particles span {
             position: absolute; width: 4px; height: 4px; border-radius: 50%;
@@ -120,7 +119,6 @@
         }
         .chat-item:active { transform: translateX(6px) scale(0.98) translateZ(0); }
 
-        /* Полоска слева */
         .chat-item::before {
             content: '';
             position: absolute;
@@ -327,6 +325,7 @@
             padding: 20px;
             display: flex; flex-direction: column; gap: 20px;
             max-width: 500px; margin: 0 auto; width: 100%;
+            contain: layout style paint;
         }
 
         .user-profile-avatar-wrap {
@@ -350,6 +349,18 @@
             font-size: 22px;
             font-weight: 400;
             color: #c9b8ff;
+        }
+
+        .user-profile-city {
+            font-size: 15px;
+            color: #b8a8ff;
+            text-align: center;
+            margin-top: -8px;
+            font-weight: 500;
+            display: none;
+        }
+        .user-profile-city.visible {
+            display: block;
         }
 
         .user-profile-bio {
@@ -388,9 +399,7 @@
             color: #fff;
             box-shadow: 0 5px 20px rgba(123, 47, 255, 0.45);
         }
-        .user-profile-action-chat:hover {
-            transform: translateY(-2px);
-        }
+        .user-profile-action-chat:hover { transform: translateY(-2px); }
 
         .user-profile-action-unmatch {
             background: rgba(217, 56, 94, 0.15);
@@ -483,6 +492,7 @@
             <div class="user-profile-avatar-wrap">
                 <img id="upAvatar" class="user-profile-avatar" src="images/girl.png" alt="">
                 <div class="user-profile-name" id="upName">Имя, <span>возраст</span></div>
+                <div class="user-profile-city" id="upCity"></div>
             </div>
 
             <div class="user-profile-bio" id="upBio">
@@ -559,8 +569,9 @@
                     const previewClass = unread[m.telegram_id] ? "chat-preview new" : "chat-preview";
                     const previewText = unread[m.telegram_id] ? "Новое сообщение..." : "Нажми, чтобы открыть чат";
                     const bio = (m.bio || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const city = (m.city || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     return `
-                        <div class="chat-item" onclick="openChat('${m.telegram_id}', '${m.name}', '${m.age}', '${m.photo || ''}', '${bio}')">
+                        <div class="chat-item" onclick="openChat('${m.telegram_id}', '${m.name}', '${m.age}', '${m.photo || ''}', '${bio}', '${city}')">
                             <div class="chat-avatar-wrapper">
                                 <img src="${m.photo || 'images/girl.png'}" class="chat-avatar" onerror="this.src='images/girl.png'">
                                 <div class="online-dot"></div>
@@ -585,13 +596,14 @@
             }
         }
 
-        function openChat(partnerId, partnerName, partnerAge, partnerPhoto, partnerBio) {
+        function openChat(partnerId, partnerName, partnerAge, partnerPhoto, partnerBio, partnerCity) {
             currentPartner = {
                 id: partnerId,
                 name: partnerName,
                 age: partnerAge,
                 photo: partnerPhoto,
-                bio: partnerBio || ""
+                bio: partnerBio || "",
+                city: partnerCity || ""
             };
             lastMessageId = 0;
 
@@ -710,6 +722,15 @@
 
             document.getElementById("upAvatar").src = currentPartner.photo || "images/girl.png";
             document.getElementById("upName").innerHTML = `${currentPartner.name}, <span>${currentPartner.age}</span>`;
+            
+            const cityEl = document.getElementById("upCity");
+            if (currentPartner.city) {
+                cityEl.innerText = `📍 ${currentPartner.city}`;
+                cityEl.classList.add("visible");
+            } else {
+                cityEl.classList.remove("visible");
+            }
+            
             document.getElementById("upBio").innerText = currentPartner.bio || "Нет описания";
 
             document.getElementById("userProfileOverlay").classList.add("active");
@@ -756,7 +777,7 @@
                         const matches = await res.json();
                         const partner = matches.find(m => String(m.telegram_id) === String(openId));
                         if (partner) {
-                            openChat(partner.telegram_id, partner.name, partner.age, partner.photo, partner.bio);
+                            openChat(partner.telegram_id, partner.name, partner.age, partner.photo, partner.bio, partner.city);
                         }
                     } catch (e) { console.warn(e); }
                 }, 300);
