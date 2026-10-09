@@ -217,7 +217,6 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             flex-shrink: 0;
         }
-        .action-btn svg { width: 28px; height: 28px; }
         .action-btn:hover { transform: translateY(-4px) scale(1.05); }
         .action-btn:active { transform: scale(0.92); }
 
@@ -245,24 +244,48 @@
             transform: rotate(360deg);
         }
 
+        /* ЛАЙК — контурное сердце */
         .btn-like {
-            background: linear-gradient(135deg, #7b2fff, #d9385e);
+            background: rgba(30, 20, 60, 0.9);
             color: #fff;
-            box-shadow: 0 8px 30px rgba(123, 47, 255, 0.6);
+            border: 2px solid rgba(120, 100, 220, 0.4);
         }
         .btn-like:hover {
-            box-shadow: 0 12px 40px rgba(123, 47, 255, 0.8);
+            border-color: rgba(123, 47, 255, 0.8);
+            box-shadow: 0 8px 30px rgba(123, 47, 255, 0.5);
+        }
+        .btn-like svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: #7b2fff;
+            stroke-width: 2.2;
+            transition: stroke 0.2s;
+        }
+        .btn-like:hover svg {
+            stroke: #a855f7;
         }
 
+        /* ДИЗЛАЙК — контурный палец вниз */
         .btn-dislike {
             background: rgba(30, 20, 60, 0.9);
             color: #fff;
             border: 2px solid rgba(120, 100, 220, 0.4);
-            font-size: 30px;
         }
         .btn-dislike:hover {
             border-color: rgba(120, 100, 220, 0.8);
             box-shadow: 0 8px 30px rgba(120, 100, 220, 0.4);
+        }
+        .btn-dislike svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: #7b2fff;
+            stroke-width: 2.2;
+            transition: stroke 0.2s;
+        }
+        .btn-dislike:hover svg {
+            stroke: #a855f7;
         }
 
         .empty {
@@ -897,16 +920,20 @@
 
     <div class="actions" id="actions" style="display:none;">
         <button class="action-btn btn-refresh" onclick="refreshProfiles()" title="Обновить анкеты">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff">
+            <svg viewBox="0 0 24 24" fill="#fff">
                 <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
             </svg>
         </button>
         <button class="action-btn btn-like" onclick="swipe('left')" title="Лайк">
-            <svg viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
         </button>
-        <button class="action-btn btn-dislike" onclick="swipe('right')" title="Дизлайк">👎</button>
+        <button class="action-btn btn-dislike" onclick="swipe('right')" title="Дизлайк">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+            </svg>
+        </button>
     </div>
 
     <div class="match-overlay" id="matchOverlay">
