@@ -73,7 +73,6 @@
         .feed-menu svg { width: 20px; height: 20px; stroke: #fff; transition: stroke 0.2s; }
         .feed-menu:hover svg { stroke: #ff5c8a; }
 
-        /* Кнопка-аватарка */
         .profile-btn {
             padding: 0 !important;
             overflow: hidden;
@@ -629,7 +628,126 @@
             box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
         }
 
+        .profile-delete-btn {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid rgba(217, 56, 94, 0.6);
+            border-radius: 14px;
+            background: rgba(217, 56, 94, 0.08);
+            color: #ff5c8a;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .profile-delete-btn:hover {
+            background: rgba(217, 56, 94, 0.2);
+            border-color: #d9385e;
+            box-shadow: 0 0 25px rgba(217, 56, 94, 0.5);
+            transform: translateY(-2px);
+        }
+        .profile-delete-btn:active {
+            transform: scale(0.98);
+        }
+        .profile-delete-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #ff5c8a;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
         .profile-photo-input { display: none; }
+
+        /* ═══ МОДАЛЬНОЕ ОКНО УДАЛЕНИЯ ═══ */
+        .delete-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 6, 24, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+        .delete-modal.active {
+            display: flex;
+        }
+        .delete-modal-card {
+            background: linear-gradient(135deg, rgba(40, 15, 30, 0.98), rgba(60, 20, 50, 0.95));
+            border: 2px solid rgba(217, 56, 94, 0.7);
+            border-radius: 24px;
+            padding: 32px 24px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(217, 56, 94, 0.5);
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .delete-modal-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(217, 56, 94, 0.8));
+            animation: pulseSlow 1.5s ease-in-out infinite;
+        }
+        .delete-modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff5c8a;
+            margin-bottom: 10px;
+        }
+        .delete-modal-text {
+            font-size: 14px;
+            color: #c9b8ff;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .delete-modal-text b {
+            color: #ff5c8a;
+        }
+        .delete-modal-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .delete-modal-btn-danger {
+            background: linear-gradient(135deg, #d9385e, #a02040);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(217, 56, 94, 0.5);
+        }
+        .delete-modal-btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 35px rgba(217, 56, 94, 0.8);
+        }
+        .delete-modal-btn-danger:active {
+            transform: scale(0.98);
+        }
+        .delete-modal-btn-cancel {
+            background: transparent;
+            color: #9a92c4;
+            border: 1.5px solid rgba(120, 100, 220, 0.3);
+        }
+        .delete-modal-btn-cancel:hover {
+            color: #fff;
+            border-color: #7b2fff;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -773,6 +891,28 @@
 
             <button class="profile-save-btn" onclick="saveProfile()">💾 Сохранить</button>
             <button class="profile-logout-btn" onclick="logout()">🚪 Выйти из аккаунта</button>
+            <button class="profile-delete-btn" onclick="openDeleteModal()">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Удалить аккаунт
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══ МОДАЛЬНОЕ ОКНО УДАЛЕНИЯ ═══ -->
+    <div class="delete-modal" id="deleteModal">
+        <div class="delete-modal-card">
+            <div class="delete-modal-icon">⚠️</div>
+            <div class="delete-modal-title">Удалить аккаунт?</div>
+            <div class="delete-modal-text">
+                Это действие <b>необратимо</b>.<br>
+                Все твои лайки, мэтчи и сообщения будут <b>удалены навсегда</b>.
+            </div>
+            <button class="delete-modal-btn delete-modal-btn-danger" onclick="confirmDeleteAccount()">
+                🗑️ Да, удалить навсегда
+            </button>
+            <button class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">
+                Отмена
+            </button>
         </div>
     </div>
 
@@ -1233,7 +1373,58 @@
             }
         }
 
-        // Бейджи
+        // ═══ УДАЛЕНИЕ АККАУНТА ═══
+        function openDeleteModal() {
+            document.getElementById("deleteModal").classList.add("active");
+            if (navigator.vibrate) navigator.vibrate(20);
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").classList.remove("active");
+        }
+
+        async function confirmDeleteAccount() {
+            const btn = document.querySelector(".delete-modal-btn-danger");
+            btn.innerText = "⏳ Удаляем...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(API_URL + "/api/profile", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ telegram_id: getTelegramId() })
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+                    localStorage.removeItem("emberUser");
+                    localStorage.removeItem("emberRegistered");
+                    localStorage.removeItem("emberTgId");
+
+                    btn.innerText = "✅ Удалено";
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 800);
+                } else {
+                    alert("Ошибка: " + (result.error || "не удалось удалить"));
+                    btn.innerText = "🗑️ Да, удалить навсегда";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error("Ошибка удаления:", e);
+                alert("Не удалось удалить аккаунт. Проверь интернет.");
+                btn.innerText = "🗑️ Да, удалить навсегда";
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById("deleteModal")?.addEventListener("click", (e) => {
+            if (e.target.id === "deleteModal") closeDeleteModal();
+        });
+
+        // ═══ БЕЙДЖИ ═══
         async function checkLikesBadge() {
             try {
                 const res = await fetch(API_URL + "/api/likes/incoming?telegram_id=" + getTelegramId());
@@ -1263,19 +1454,13 @@
             } catch (e) {}
         }
 
-        function openMenu() {
-            if (confirm("Сбросить аккаунт и выйти?")) {
-                localStorage.removeItem("emberUser");
-                localStorage.removeItem("emberRegistered");
-                window.location.href = "index.html";
-            }
-        }
-
+        // ═══ СВАЙПЫ ═══
         let startX = 0;
         document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
         document.addEventListener("touchend", e => {
             if (document.getElementById("likesView").classList.contains("active")) return;
             if (document.getElementById("profileOverlay").classList.contains("active")) return;
+            if (document.getElementById("deleteModal").classList.contains("active")) return;
             const diff = e.changedTouches[0].clientX - startX;
             if (diff > 80) swipe("right");
             if (diff < -80) swipe("left");
@@ -1288,4 +1473,4 @@
         setInterval(checkLikesBadge, 15000);
     </script>
 </body>
-    </html>
+                </html>
