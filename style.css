@@ -1,19 +1,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 :root {
-    --bg: #0a0618;
-    --card: rgba(30, 20, 60, 0.65);
-    --card-hover: rgba(45, 30, 85, 0.75);
-    --border: rgba(120, 100, 220, 0.35);
+    --bg: #000000;
+    --card: rgba(20, 20, 20, 0.85);
+    --card-hover: rgba(35, 35, 35, 0.85);
+    --border: rgba(255, 255, 255, 0.15);
     --text: #ffffff;
-    --muted: #9a92c4;
-    --accent: #d9385e;
-    --accent-light: #ff5c8a;
-    --accent-dark: #a02040;
-    --purple: #7b2fff;
-    --violet: #4a2bff;
-    --blue: #4a90e2;
-    --green: #a4d165;
+    --muted: #808080;
+    --accent: #ffffff;
+    --accent-light: #cccccc;
+    --accent-dark: #808080;
 }
 
 html, body { height: 100%; overflow-x: hidden; }
@@ -26,16 +22,15 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    /* Убрали body::before с анимацией — заменили на статичный градиент */
     background:
-        radial-gradient(circle at 15% 15%, rgba(123, 47, 255, 0.35), transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(217, 56, 94, 0.3), transparent 45%),
-        linear-gradient(135deg, #0a0618 0%, #150a2e 50%, #0a0618 100%);
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.06), transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(180, 180, 180, 0.05), transparent 60%),
+        linear-gradient(135deg, #000000 0%, #0d0d0d 50%, #000000 100%);
     background-attachment: fixed;
 }
 
-/* Убрали анимацию bgShift — она тормозила */
-
+/* Прогресс-бар */
 .progress {
     position: fixed; top: 0; left: 0; right: 0;
     height: 3px;
@@ -44,31 +39,9 @@ body {
 }
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--purple), var(--violet), var(--accent-light));
+    background: linear-gradient(90deg, #ffffff, #a0a0a0);
     width: 16%;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Убрали box-shadow с 2 слоями */
-}
-
-/* Мини-логотип — убрали backdrop-filter и glow-анимацию */
-.brand-mini {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(217, 56, 94, 0.6);
-    /* Оставили только один box-shadow вместо 4 */
-    box-shadow: 0 0 30px rgba(217, 56, 94, 0.5);
-    z-index: 50;
-    background: var(--card);
-    transition: transform 0.3s;
-}
-
-.brand-mini:hover {
-    transform: scale(1.1) rotate(5deg);
 }
 
 .app {
@@ -85,7 +58,6 @@ body {
 
 .screen.active {
     display: block;
-    /* Упростили анимацию входа */
     animation: fadeIn 0.3s;
 }
 
@@ -94,7 +66,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Аватар — убрали анимации float и glowAvatar (постоянные перерисовки) */
+/* Аватар */
 .avatar-wrapper {
     display: flex;
     justify-content: center;
@@ -109,10 +81,9 @@ body {
     border-radius: 50%;
     object-fit: cover;
     object-position: center top;
-    background: linear-gradient(135deg, var(--accent), var(--purple));
-    border: 3px solid rgba(217, 56, 94, 0.6);
-    /* Оставили 2 слоя свечения вместо 5 */
-    box-shadow: 0 0 40px rgba(217, 56, 94, 0.5), 0 0 80px rgba(123, 47, 255, 0.3);
+    background: linear-gradient(135deg, #333, #111);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), 0 0 80px rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 2;
     transition: transform 0.3s;
@@ -121,10 +92,6 @@ body {
 .avatar:hover {
     transform: scale(1.05);
 }
-
-/* Убрали .avatar-wrapper::before с пульсирующим ореолом */
-/* Убрали @keyframes float и @keyframes glowAvatar */
-/* Убрали @keyframes pulseOrb */
 
 h1 {
     font-size: 26px;
@@ -151,11 +118,11 @@ label {
     font-weight: 600;
 }
 
-/* Поля ввода — убрали backdrop-filter: blur */
+/* Поля ввода */
 input[type="text"], textarea {
     width: 100%;
-    background: rgba(30, 20, 60, 0.65);
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    background: rgba(20, 20, 20, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
     color: var(--text);
@@ -166,12 +133,12 @@ input[type="text"], textarea {
     resize: vertical;
 }
 
-input[type="text"]::placeholder, textarea::placeholder { color: #6a6288; }
+input[type="text"]::placeholder, textarea::placeholder { color: #555; }
 
 input[type="text"]:focus, textarea:focus {
-    border-color: var(--accent);
-    background: rgba(45, 30, 85, 0.75);
-    box-shadow: 0 0 20px rgba(217, 56, 94, 0.3);
+    border-color: #ffffff;
+    background: rgba(35, 35, 35, 0.85);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 @keyframes shake {
@@ -183,18 +150,18 @@ input[type="text"]:focus, textarea:focus {
 
 .hint {
     font-size: 12px;
-    color: #6a6288;
+    color: #5a5a5a;
     margin-top: 8px;
     padding-left: 4px;
 }
 
 .hint-box {
-    background: rgba(123, 47, 255, 0.15);
-    border: 1px solid rgba(150, 120, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 14px 16px;
     font-size: 13px;
-    color: #d8cfff;
+    color: #ccc;
     margin-top: 16px;
     display: flex;
     gap: 10px;
@@ -203,9 +170,9 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .hint-icon { font-size: 18px; flex-shrink: 0; }
-.hint-box b { color: var(--accent-light); }
+.hint-box b { color: #ffffff; }
 
-/* Кнопки — убрали ::before с бликом */
+/* Кнопки */
 .btn-next, .btn-skip, .btn-back {
     border: none;
     border-radius: 14px;
@@ -219,25 +186,25 @@ input[type="text"]:focus, textarea:focus {
 
 .btn-next {
     flex: 1;
-    background: linear-gradient(135deg, var(--purple), var(--accent));
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(123, 47, 255, 0.5);
+    background: linear-gradient(135deg, #ffffff, #808080);
+    color: #000;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
 }
 
 .btn-next:hover, .btn-next:active {
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(123, 47, 255, 0.7);
+    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25);
 }
 
 .btn-back {
     width: 56px;
-    background: rgba(30, 20, 60, 0.65);
+    background: rgba(20, 20, 20, 0.75);
     color: #fff;
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     font-size: 20px;
 }
 
-.btn-back:hover { background: rgba(45, 30, 85, 0.75); }
+.btn-back:hover { background: rgba(35, 35, 35, 0.85); }
 
 .btn-skip {
     width: 100%;
@@ -258,7 +225,7 @@ input[type="text"]:focus, textarea:focus {
 
 .btn-row .btn-next { margin-top: 0; }
 
-/* Языки — убрали backdrop-filter */
+/* Языки */
 .lang-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -267,8 +234,8 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn {
-    background: rgba(30, 20, 60, 0.65);
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    background: rgba(20, 20, 20, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 12px;
     color: #fff;
@@ -293,20 +260,21 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .lang-btn:hover {
-    background: rgba(45, 30, 85, 0.75);
-    border-color: rgba(150, 120, 255, 0.5);
+    background: rgba(35, 35, 35, 0.85);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .lang-btn.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    background: linear-gradient(135deg, #ffffff, #808080);
+    color: #000;
     border-color: transparent;
-    box-shadow: 0 4px 15px rgba(217, 56, 94, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
-/* Карточки выбора — убрали backdrop-filter */
+/* Карточки выбора */
 .choice {
-    background: rgba(30, 20, 60, 0.65);
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    background: rgba(20, 20, 20, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
     margin-bottom: 8px;
@@ -320,14 +288,14 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .choice:hover {
-    background: rgba(45, 30, 85, 0.75);
-    border-color: rgba(150, 120, 255, 0.5);
+    background: rgba(35, 35, 35, 0.85);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .choice.selected {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(217, 56, 94, 0.25), rgba(123, 47, 255, 0.2));
-    box-shadow: 0 0 20px rgba(217, 56, 94, 0.3);
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
 }
 
 .icon {
@@ -343,31 +311,31 @@ input[type="text"]:focus, textarea:focus {
     font-weight: 700;
 }
 
-.icon.blue { background: var(--blue); }
-.icon.pink { background: var(--accent); }
-.icon.green { background: var(--green); }
+.icon.blue { background: #4a90e2; }
+.icon.pink { background: #808080; }
+.icon.green { background: #666; }
 
-/* Слайдеры — убрали backdrop-filter */
+/* Слайдеры */
 .slider-row {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: rgba(30, 20, 60, 0.65);
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    background: rgba(20, 20, 20, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px 18px;
     margin-bottom: 8px;
     transition: border-color 0.2s;
 }
 
-.slider-row:focus-within { border-color: var(--accent); }
+.slider-row:focus-within { border-color: #ffffff; }
 
 .slider-value {
     min-width: 36px;
     text-align: center;
     font-weight: 700;
     font-size: 17px;
-    color: var(--accent-light);
+    color: #ffffff;
 }
 
 input[type="range"] {
@@ -375,7 +343,7 @@ input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     height: 4px;
-    background: rgba(120, 100, 220, 0.3);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
     outline: none;
 }
@@ -388,9 +356,8 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     background: #fff;
     cursor: pointer;
-    /* Упростили тень */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    border: 3px solid var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    border: 3px solid #ffffff;
     transition: transform 0.2s;
 }
 
@@ -401,10 +368,10 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
     background: #fff;
     cursor: pointer;
-    border: 3px solid var(--accent);
+    border: 3px solid #ffffff;
 }
 
-/* Загрузка фото — убрали backdrop-filter */
+/* Загрузка фото */
 .photo-upload { margin-top: 10px; }
 
 .photo-box {
@@ -412,8 +379,8 @@ input[type="range"]::-moz-range-thumb {
     width: 100%;
     aspect-ratio: 3 / 4;
     max-height: 360px;
-    background: rgba(30, 20, 60, 0.65);
-    border: 2px dashed rgba(120, 100, 220, 0.4);
+    background: rgba(20, 20, 20, 0.75);
+    border: 2px dashed rgba(255, 255, 255, 0.25);
     border-radius: 20px;
     cursor: pointer;
     overflow: hidden;
@@ -422,8 +389,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .photo-box:hover {
-    border-color: var(--accent);
-    background: rgba(45, 30, 85, 0.75);
+    border-color: #ffffff;
+    background: rgba(35, 35, 35, 0.85);
 }
 
 .photo-placeholder {
@@ -442,7 +409,7 @@ input[type="range"]::-moz-range-thumb {
 .photo-plus {
     font-size: 48px;
     font-weight: 300;
-    color: var(--accent-light);
+    color: #ffffff;
     line-height: 1;
 }
 
@@ -454,10 +421,10 @@ input[type="range"]::-moz-range-thumb {
     inset: 0;
 }
 
-/* Результат — убрали backdrop-filter */
+/* Результат */
 .result-box {
-    background: rgba(30, 20, 60, 0.65);
-    border: 1.5px solid rgba(120, 100, 220, 0.3);
+    background: rgba(20, 20, 20, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
     padding: 20px;
     margin-top: 20px;
@@ -466,11 +433,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .result-box p { display: flex; justify-content: space-between; gap: 10px; }
-.result-box strong { color: var(--accent-light); font-weight: 600; }
+.result-box strong { color: #ffffff; font-weight: 600; }
 
 @media (max-width: 400px) {
     h1 { font-size: 22px; }
     .avatar { width: 150px; height: 150px; }
     .btn-next { padding: 16px; font-size: 15px; }
-    .brand-mini { width: 60px; height: 60px; }
-    }
+}
