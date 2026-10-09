@@ -11,63 +11,57 @@
     <style>
         body {
             padding: 0; overflow: hidden;
-            background: radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.15), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.12), transparent 50%),
-                        #0a0618;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.25), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.2), transparent 50%),
+                #0a0618;
         }
 
+        /* Частицы статичные — без анимации */
         .bg-particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
         .bg-particles span {
             position: absolute; width: 4px; height: 4px; border-radius: 50%;
-            background: rgba(217, 56, 94, 0.4);
-            animation: floatParticle 15s infinite ease-in-out;
+            background: rgba(217, 56, 94, 0.3);
         }
         .bg-particles span:nth-child(1) { left: 10%; top: 20%; }
-        .bg-particles span:nth-child(2) { left: 80%; top: 30%; animation-delay: 3s; background: rgba(123, 47, 255, 0.5); }
-        .bg-particles span:nth-child(3) { left: 30%; top: 70%; animation-delay: 6s; }
-        .bg-particles span:nth-child(4) { left: 70%; top: 80%; animation-delay: 9s; background: rgba(123, 47, 255, 0.5); }
-        .bg-particles span:nth-child(5) { left: 50%; top: 15%; animation-delay: 12s; }
-
-        @keyframes floatParticle {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-            50% { transform: translate(30px, -40px) scale(1.5); opacity: 0.8; }
-        }
-
-        .feed-header {
-            position: fixed; top: 0; left: 0; right: 0;
-            padding: 16px 20px;
-            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.5), transparent);
-            z-index: 10; display: flex; align-items: center; justify-content: space-between;
-        }
-
-        .feed-title {
-            font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
-            background-size: 200% 200%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: gradientShift 3s ease infinite;
-        }
+        .bg-particles span:nth-child(2) { left: 80%; top: 30%; background: rgba(123, 47, 255, 0.4); }
+        .bg-particles span:nth-child(3) { left: 30%; top: 70%; }
+        .bg-particles span:nth-child(4) { left: 70%; top: 80%; background: rgba(123, 47, 255, 0.4); }
+        .bg-particles span:nth-child(5) { left: 50%; top: 15%; }
 
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
 
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Шапка */
+        .feed-header {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 16px 20px;
+            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.7), transparent);
+            z-index: 10; display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .feed-title {
+            font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
         .feed-menu {
             width: 42px; height: 42px; border-radius: 50%;
-            background: rgba(30, 20, 60, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(120, 100, 220, 0.3);
+            background: rgba(30, 20, 60, 0.9);
+            border: 1px solid rgba(120, 100, 220, 0.35);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: #fff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s, border-color 0.2s;
             position: relative;
         }
         .feed-menu:hover {
             transform: scale(1.1);
-            background: rgba(45, 30, 85, 0.8);
-            border-color: rgba(217, 56, 94, 0.6);
-            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+            border-color: rgba(217, 56, 94, 0.7);
         }
         .feed-menu:active { transform: scale(0.95); }
         .feed-menu svg { width: 20px; height: 20px; stroke: #fff; transition: stroke 0.2s; }
@@ -77,7 +71,7 @@
             padding: 0 !important;
             overflow: hidden;
             border: 2px solid rgba(217, 56, 94, 0.6) !important;
-            box-shadow: 0 0 15px rgba(217, 56, 94, 0.4) !important;
+            box-shadow: 0 0 12px rgba(217, 56, 94, 0.4) !important;
         }
         .profile-btn img {
             width: 100%; height: 100%;
@@ -85,7 +79,7 @@
         }
         .profile-btn:hover {
             border-color: rgba(217, 56, 94, 1) !important;
-            box-shadow: 0 0 25px rgba(217, 56, 94, 0.8) !important;
+            box-shadow: 0 0 18px rgba(217, 56, 94, 0.7) !important;
         }
 
         .unread-badge {
@@ -94,15 +88,11 @@
             color: #fff; border-radius: 50%; min-width: 20px; height: 20px;
             display: none; align-items: center; justify-content: center;
             font-size: 11px; font-weight: 700; padding: 0 5px;
-            box-shadow: 0 2px 8px rgba(217, 56, 94, 0.6);
-            animation: badgePulse 2s ease-in-out infinite;
+            box-shadow: 0 2px 6px rgba(217, 56, 94, 0.5);
         }
         .unread-badge.active { display: flex; }
-        @keyframes badgePulse {
-            0%, 100% { box-shadow: 0 2px 8px rgba(217, 56, 94, 0.6); }
-            50% { box-shadow: 0 2px 20px rgba(217, 56, 94, 1), 0 0 30px rgba(217, 56, 94, 0.5); }
-        }
 
+        /* Лента */
         .cards-container {
             width: 100vw; height: 100vh;
             position: relative; overflow: hidden; z-index: 1;
@@ -111,14 +101,16 @@
         .card {
             position: absolute;
             top: 70px; left: 20px; right: 20px; bottom: 100px;
-            background: rgba(30, 20, 60, 0.55);
-            backdrop-filter: blur(20px);
+            background: rgba(20, 12, 45, 0.85);
+            border: 1px solid rgba(120, 100, 220, 0.3);
             border-radius: 24px; overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(123, 47, 255, 0.2), inset 0 0 0 1px rgba(120, 100, 220, 0.2);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 30px rgba(123, 47, 255, 0.2);
             cursor: grab;
             touch-action: pan-y;
             will-change: transform;
-            animation: cardSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            animation: cardSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @keyframes cardSlideIn {
@@ -132,7 +124,13 @@
             animation: none;
         }
 
-        .card img { width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+        .card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
 
         .card-info {
             position: absolute; bottom: 0; left: 0; right: 0;
@@ -145,7 +143,7 @@
         .card-age { font-size: 22px; color: rgba(255,255,255,0.9); font-weight: 400; }
         .card-bio { font-size: 14px; color: rgba(255,255,255,0.85); margin-top: 8px; line-height: 1.4; }
 
-        /* Индикаторы LIKE/NOPE */
+        /* Штампы LIKE/NOPE */
         .card-stamp {
             position: absolute;
             top: 40px;
@@ -189,6 +187,7 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
         }
 
+        /* Кнопки */
         .actions {
             position: fixed; bottom: 24px; left: 0; right: 0;
             display: flex; justify-content: center; gap: 24px; z-index: 10;
@@ -198,7 +197,7 @@
             width: 68px; height: 68px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
         .action-btn svg { width: 28px; height: 28px; }
@@ -206,8 +205,7 @@
         .action-btn:active { transform: scale(0.92); }
 
         .btn-dislike {
-            background: rgba(30, 20, 60, 0.8);
-            backdrop-filter: blur(20px);
+            background: rgba(30, 20, 60, 0.9);
             color: #fff;
             border: 2px solid rgba(120, 100, 220, 0.4);
         }
@@ -219,30 +217,19 @@
         .btn-like {
             background: linear-gradient(135deg, #7b2fff, #d9385e);
             color: #fff;
-            box-shadow: 0 8px 30px rgba(123, 47, 255, 0.6), 0 0 60px rgba(217, 56, 94, 0.4);
-            position: relative; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(123, 47, 255, 0.6);
         }
-        .btn-like::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: translateX(-100%); transition: transform 0.6s;
-        }
-        .btn-like:hover::before { transform: translateX(100%); }
         .btn-like:hover {
-            box-shadow: 0 12px 40px rgba(123, 47, 255, 0.8), 0 0 80px rgba(217, 56, 94, 0.6);
+            box-shadow: 0 12px 40px rgba(123, 47, 255, 0.8);
         }
 
+        /* Пусто */
         .empty {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100%; color: #9a92c4; text-align: center;
             padding: 40px; font-size: 16px; gap: 16px;
-            animation: fadeIn 0.5s;
         }
-        .empty-icon { font-size: 70px; opacity: 0.5; animation: pulseSlow 2s ease-in-out infinite; }
-        @keyframes pulseSlow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
+        .empty-icon { font-size: 70px; opacity: 0.5; }
         .empty-title {
             font-size: 22px; color: #fff; font-weight: 700;
             background: linear-gradient(135deg, #ff5c8a, #7b2fff);
@@ -254,153 +241,134 @@
             height: 100%; color: #9a92c4; font-size: 16px;
         }
 
+        /* МЭТЧ */
         .match-overlay {
             position: fixed; inset: 0;
-            background: rgba(10, 6, 24, 0.9);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(10, 6, 24, 0.95);
             z-index: 1000; display: none;
             align-items: center; justify-content: center;
-            padding: 20px; animation: fadeIn 0.4s;
+            padding: 20px; animation: fadeIn 0.3s;
         }
         .match-overlay.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .match-card {
             background: linear-gradient(135deg, rgba(30, 20, 60, 0.98), rgba(60, 30, 100, 0.95));
             border: 2px solid rgba(217, 56, 94, 0.5);
             border-radius: 32px; padding: 36px 28px;
             text-align: center; max-width: 360px; width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 80px rgba(217, 56, 94, 0.5), 0 0 120px rgba(123, 47, 255, 0.4);
-            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative; overflow: hidden;
-        }
-        .match-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(217, 56, 94, 0.3), rgba(123, 47, 255, 0.3), transparent);
-            animation: rotateGlow 6s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .match-card > * { position: relative; z-index: 1; }
-        @keyframes popIn {
-            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-            50% { transform: scale(1.05) rotate(2deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 60px rgba(217, 56, 94, 0.4);
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .match-emoji { font-size: 72px; margin-bottom: 16px; animation: heartBeat 1s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(217, 56, 94, 0.8)); }
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.2); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.15); }
+        @keyframes popIn {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
+
+        .match-emoji {
+            font-size: 72px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 15px rgba(217, 56, 94, 0.6));
+        }
+
         .match-title {
             font-size: 32px; font-weight: 800;
             background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
-            background-size: 200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             margin-bottom: 8px; letter-spacing: -1px;
-            animation: gradientShift 3s ease infinite;
         }
         .match-sub { font-size: 15px; color: #9a92c4; margin-bottom: 24px; }
-        .match-photos { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; position: relative; }
+        .match-photos { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
         .match-photo {
             width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
-            border: 3px solid #d9385e; box-shadow: 0 0 20px rgba(217, 56, 94, 0.6);
-            transition: transform 0.3s;
+            border: 3px solid #d9385e;
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.5);
         }
-        .match-photo:nth-child(1) { transform: rotate(-5deg); animation: slideInLeft 0.6s 0.2s backwards; }
-        .match-photo:nth-child(2) { transform: rotate(5deg); animation: slideInRight 0.6s 0.2s backwards; }
-        @keyframes slideInLeft { from { transform: translateX(-100px) rotate(-20deg); opacity: 0; } to { transform: translateX(0) rotate(-5deg); opacity: 1; } }
-        @keyframes slideInRight { from { transform: translateX(100px) rotate(20deg); opacity: 0; } to { transform: translateX(0) rotate(5deg); opacity: 1; } }
+        .match-photo:nth-child(1) { transform: rotate(-5deg); }
+        .match-photo:nth-child(2) { transform: rotate(5deg); }
 
         .match-name { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 20px; }
         .match-btn {
             width: 100%; padding: 16px; border: none; border-radius: 16px;
             font-size: 16px; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: all 0.3s;
+            font-family: inherit; transition: transform 0.2s;
         }
         .match-btn-primary {
             background: linear-gradient(135deg, #7b2fff, #d9385e);
-            color: #fff; box-shadow: 0 6px 25px rgba(123, 47, 255, 0.5);
-            margin-bottom: 10px; position: relative; overflow: hidden;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(123, 47, 255, 0.5);
+            margin-bottom: 10px;
         }
-        .match-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 35px rgba(123, 47, 255, 0.7); }
+        .match-btn-primary:hover { transform: translateY(-2px); }
         .match-btn-secondary {
             background: transparent; color: #9a92c4;
             border: 1.5px solid rgba(120, 100, 220, 0.3);
         }
-        .match-btn-secondary:hover { color: #fff; border-color: #d9385e; transform: translateY(-2px); }
+        .match-btn-secondary:hover { color: #fff; border-color: #d9385e; }
 
         /* ═══ ПАНЕЛЬ ЛАЙКОВ ═══ */
         .likes-view {
             position: fixed; inset: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.15), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.12), transparent 50%),
-                        #0a0618;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.2), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.15), transparent 50%),
+                #0a0618;
             z-index: 2000; display: none;
             flex-direction: column;
-            animation: fadeIn 0.3s;
+            animation: fadeIn 0.2s;
         }
         .likes-view.active { display: flex; }
 
         .likes-header {
             padding: 14px 16px;
-            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.7), transparent);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 6, 24, 0.95);
+            border-bottom: 1px solid rgba(120, 100, 220, 0.15);
             display: flex; align-items: center; gap: 12px;
             min-height: 66px; flex-shrink: 0;
         }
         .likes-back {
             width: 42px; height: 42px; border-radius: 50%;
-            background: rgba(30, 20, 60, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(120, 100, 220, 0.3);
+            background: rgba(30, 20, 60, 0.9);
+            border: 1px solid rgba(120, 100, 220, 0.35);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: #fff; flex-shrink: 0;
-            transition: all 0.3s;
+            transition: transform 0.2s, border-color 0.2s;
         }
         .likes-back:hover {
             transform: scale(1.1);
-            background: rgba(45, 30, 85, 0.8);
-            border-color: rgba(217, 56, 94, 0.6);
-            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+            border-color: rgba(217, 56, 94, 0.7);
         }
         .likes-back svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
         .likes-title {
             font-size: 20px; font-weight: 800; letter-spacing: -0.5px; flex: 1;
             background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
-            background-size: 200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: gradientShift 3s ease infinite;
         }
 
         .likes-tabs {
             display: flex; gap: 8px;
-            padding: 0 16px 12px;
+            padding: 12px 16px;
             flex-shrink: 0;
         }
         .likes-tab {
             flex: 1; padding: 12px 16px;
             border-radius: 14px;
-            background: rgba(30, 20, 60, 0.6);
-            backdrop-filter: blur(20px);
+            background: rgba(30, 20, 60, 0.75);
             border: 1.5px solid rgba(120, 100, 220, 0.3);
             color: #9a92c4; font-size: 14px; font-weight: 600;
             cursor: pointer; font-family: inherit;
-            transition: all 0.3s; text-align: center;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+            text-align: center;
         }
         .likes-tab:hover {
-            background: rgba(45, 30, 85, 0.7);
+            background: rgba(45, 30, 85, 0.85);
             border-color: rgba(217, 56, 94, 0.5);
         }
         .likes-tab.active {
             background: linear-gradient(135deg, #7b2fff, #d9385e);
             color: #fff; border-color: transparent;
-            box-shadow: 0 4px 20px rgba(123, 47, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(123, 47, 255, 0.4);
         }
         .likes-tab-count {
             display: inline-block;
@@ -415,29 +383,22 @@
         .likes-content {
             flex: 1; overflow-y: auto;
             padding: 0 16px 20px;
+            contain: layout style paint;
         }
-        .likes-content::-webkit-scrollbar { width: 4px; }
-        .likes-content::-webkit-scrollbar-thumb { background: rgba(120, 100, 220, 0.3); border-radius: 4px; }
 
         .like-card {
             display: flex; align-items: center; gap: 14px;
             padding: 14px 18px; margin-bottom: 12px;
             border: 1.5px solid rgba(120, 100, 220, 0.35);
             border-radius: 20px;
-            background: rgba(30, 20, 60, 0.5);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            animation: itemEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-        }
-        @keyframes itemEnter {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            background: rgba(20, 12, 45, 0.85);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .like-avatar {
             width: 58px; height: 58px; border-radius: 50%; object-fit: cover;
             border: 2.5px solid rgba(217, 56, 94, 0.6);
-            box-shadow: 0 0 0 3px rgba(217, 56, 94, 0.15), 0 0 20px rgba(217, 56, 94, 0.5);
+            box-shadow: 0 0 15px rgba(217, 56, 94, 0.4);
             flex-shrink: 0;
         }
 
@@ -457,23 +418,20 @@
             width: 44px; height: 44px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s;
         }
         .like-btn svg { width: 20px; height: 20px; stroke-width: 2.5; fill: none; }
 
         .like-btn-accept {
             background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
-        .like-btn-accept:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.8);
-        }
+        .like-btn-accept:hover { transform: scale(1.1); }
         .like-btn-accept svg { stroke: #fff; }
 
         .like-btn-reject {
-            background: rgba(30, 20, 60, 0.7);
+            background: rgba(30, 20, 60, 0.85);
             color: #ff5c8a;
             border: 1.5px solid rgba(217, 56, 94, 0.5);
         }
@@ -481,7 +439,6 @@
             transform: scale(1.1);
             background: rgba(217, 56, 94, 0.2);
             border-color: #d9385e;
-            box-shadow: 0 6px 25px rgba(217, 56, 94, 0.5);
         }
         .like-btn-reject svg { stroke: #ff5c8a; }
 
@@ -493,7 +450,6 @@
         .like-btn-cancel:hover {
             transform: scale(1.1);
             background: rgba(217, 56, 94, 0.3);
-            box-shadow: 0 6px 25px rgba(217, 56, 94, 0.5);
         }
         .like-btn-cancel svg { stroke: #ff5c8a; }
 
@@ -508,20 +464,21 @@
         /* ═══ ПРОФИЛЬ ═══ */
         .profile-overlay {
             position: fixed; inset: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.15), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.12), transparent 50%),
-                        #0a0618;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.2), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(217, 56, 94, 0.15), transparent 50%),
+                #0a0618;
             z-index: 2000; display: none;
             flex-direction: column;
-            animation: fadeIn 0.3s;
+            animation: fadeIn 0.2s;
             overflow-y: auto;
         }
         .profile-overlay.active { display: flex; }
 
         .profile-header-bar {
             padding: 14px 16px;
-            background: linear-gradient(180deg, rgba(10,6,24,0.98), rgba(10,6,24,0.7), transparent);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 6, 24, 0.95);
+            border-bottom: 1px solid rgba(120, 100, 220, 0.15);
             display: flex; align-items: center; gap: 12px;
             min-height: 66px; flex-shrink: 0;
             position: sticky; top: 0; z-index: 10;
@@ -529,27 +486,22 @@
 
         .profile-back-btn {
             width: 42px; height: 42px; border-radius: 50%;
-            background: rgba(30, 20, 60, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(120, 100, 220, 0.3);
+            background: rgba(30, 20, 60, 0.9);
+            border: 1px solid rgba(120, 100, 220, 0.35);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: #fff; flex-shrink: 0;
-            transition: all 0.3s;
+            transition: transform 0.2s, border-color 0.2s;
         }
         .profile-back-btn:hover {
             transform: scale(1.1);
-            background: rgba(45, 30, 85, 0.8);
-            border-color: rgba(217, 56, 94, 0.6);
-            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
+            border-color: rgba(217, 56, 94, 0.7);
         }
         .profile-back-btn svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
         .profile-title-bar {
             font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
             background: linear-gradient(135deg, #ff5c8a, #7b2fff, #a855f7);
-            background-size: 200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: gradientShift 3s ease infinite;
         }
 
         .profile-content {
@@ -570,7 +522,7 @@
         .profile-avatar-img {
             width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
             border: 3px solid rgba(217, 56, 94, 0.6);
-            box-shadow: 0 0 0 6px rgba(217, 56, 94, 0.15), 0 0 30px rgba(217, 56, 94, 0.5), 0 0 60px rgba(123, 47, 255, 0.3);
+            box-shadow: 0 0 30px rgba(217, 56, 94, 0.4);
         }
 
         .profile-avatar-edit {
@@ -580,12 +532,11 @@
             border: 3px solid #0a0618;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(123, 47, 255, 0.6);
-            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(123, 47, 255, 0.5);
+            transition: transform 0.2s;
         }
         .profile-avatar-edit:hover {
             transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 6px 25px rgba(123, 47, 255, 0.9);
         }
         .profile-avatar-edit svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
@@ -600,34 +551,33 @@
         .profile-field input,
         .profile-field textarea {
             width: 100%;
-            background: rgba(30, 20, 60, 0.55);
-            backdrop-filter: blur(20px);
+            background: rgba(30, 20, 60, 0.75);
             border: 1.5px solid rgba(120, 100, 220, 0.3);
             border-radius: 14px;
             padding: 14px 16px;
             color: #fff; font-size: 15px;
             font-family: inherit; outline: none;
-            transition: all 0.3s; resize: vertical;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            resize: vertical;
         }
         .profile-field input:focus,
         .profile-field textarea:focus {
             border-color: #d9385e;
-            background: rgba(45, 30, 85, 0.7);
-            box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.3);
+            background: rgba(45, 30, 85, 0.85);
+            box-shadow: 0 0 20px rgba(217, 56, 94, 0.25);
         }
         .profile-field textarea { min-height: 100px; }
 
         .profile-select {
             width: 100%;
-            background: rgba(30, 20, 60, 0.55);
-            backdrop-filter: blur(20px);
+            background: rgba(30, 20, 60, 0.75);
             border: 1.5px solid rgba(120, 100, 220, 0.3);
             border-radius: 14px;
             padding: 14px 16px;
             color: #fff; font-size: 15px;
             font-family: inherit; outline: none;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: border-color 0.2s;
             appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239a92c4%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
@@ -637,7 +587,6 @@
         }
         .profile-select:focus {
             border-color: #d9385e;
-            box-shadow: 0 0 0 4px rgba(217, 56, 94, 0.15), 0 0 25px rgba(123, 47, 255, 0.3);
         }
         .profile-select option {
             background: #1a1030; color: #fff;
@@ -649,20 +598,10 @@
             background: linear-gradient(135deg, #7b2fff, #d9385e);
             color: #fff; font-size: 16px; font-weight: 700;
             cursor: pointer; font-family: inherit;
-            box-shadow: 0 6px 25px rgba(123, 47, 255, 0.5);
-            transition: all 0.3s;
-            position: relative; overflow: hidden;
+            box-shadow: 0 6px 20px rgba(123, 47, 255, 0.4);
+            transition: transform 0.2s;
         }
-        .profile-save-btn::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: translateX(-100%); transition: transform 0.6s;
-        }
-        .profile-save-btn:hover::before { transform: translateX(100%); }
-        .profile-save-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 35px rgba(123, 47, 255, 0.7);
-        }
+        .profile-save-btn:hover { transform: translateY(-2px); }
         .profile-save-btn:active { transform: scale(0.98); }
 
         .profile-logout-btn {
@@ -672,12 +611,11 @@
             background: rgba(217, 56, 94, 0.1);
             color: #ff5c8a; font-size: 14px; font-weight: 600;
             cursor: pointer; font-family: inherit;
-            transition: all 0.3s;
+            transition: background 0.2s, border-color 0.2s;
         }
         .profile-logout-btn:hover {
             background: rgba(217, 56, 94, 0.2);
             border-color: #d9385e;
-            box-shadow: 0 0 20px rgba(217, 56, 94, 0.4);
         }
 
         .profile-delete-btn {
@@ -691,7 +629,7 @@
             font-weight: 600;
             cursor: pointer;
             font-family: inherit;
-            transition: all 0.3s;
+            transition: background 0.2s, border-color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -700,8 +638,6 @@
         .profile-delete-btn:hover {
             background: rgba(217, 56, 94, 0.2);
             border-color: #d9385e;
-            box-shadow: 0 0 25px rgba(217, 56, 94, 0.5);
-            transform: translateY(-2px);
         }
         .profile-delete-btn:active {
             transform: scale(0.98);
@@ -720,32 +656,30 @@
         .delete-modal {
             position: fixed;
             inset: 0;
-            background: rgba(10, 6, 24, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 6, 24, 0.9);
             z-index: 3000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            animation: fadeIn 0.3s;
+            animation: fadeIn 0.2s;
         }
         .delete-modal.active { display: flex; }
         .delete-modal-card {
-            background: linear-gradient(135deg, rgba(40, 15, 30, 0.98), rgba(60, 20, 50, 0.95));
+            background: linear-gradient(135deg, rgba(40, 15, 30, 0.98), rgba(60, 20, 50, 0.98));
             border: 2px solid rgba(217, 56, 94, 0.7);
             border-radius: 24px;
             padding: 32px 24px;
             max-width: 360px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(217, 56, 94, 0.5);
-            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 50px rgba(217, 56, 94, 0.4);
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .delete-modal-icon {
             font-size: 56px;
             margin-bottom: 12px;
-            filter: drop-shadow(0 0 20px rgba(217, 56, 94, 0.8));
-            animation: pulseSlow 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(217, 56, 94, 0.6));
         }
         .delete-modal-title {
             font-size: 24px; font-weight: 800;
@@ -760,17 +694,16 @@
             width: 100%; padding: 14px; border: none;
             border-radius: 14px; font-size: 15px;
             font-weight: 700; cursor: pointer;
-            font-family: inherit; transition: all 0.3s;
+            font-family: inherit; transition: transform 0.2s;
             margin-bottom: 10px;
         }
         .delete-modal-btn-danger {
             background: linear-gradient(135deg, #d9385e, #a02040);
             color: #fff;
-            box-shadow: 0 6px 25px rgba(217, 56, 94, 0.5);
+            box-shadow: 0 6px 20px rgba(217, 56, 94, 0.4);
         }
         .delete-modal-btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 35px rgba(217, 56, 94, 0.8);
         }
         .delete-modal-btn-cancel {
             background: transparent;
@@ -780,7 +713,28 @@
         .delete-modal-btn-cancel:hover {
             color: #fff;
             border-color: #7b2fff;
-            transform: translateY(-2px);
+        }
+
+        /* GPU-оптимизация */
+        .card,
+        .feed-menu,
+        .chat-item,
+        .like-card,
+        .match-photo,
+        .like-avatar,
+        .avatar {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .likes-content,
+        .profile-content,
+        .cards-container {
+            contain: layout style paint;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
@@ -843,7 +797,7 @@
         </div>
     </div>
 
-    <!-- ═══ ПАНЕЛЬ ЛАЙКОВ ═══ -->
+    <!-- ПАНЕЛЬ ЛАЙКОВ -->
     <div class="likes-view" id="likesView">
         <div class="likes-header">
             <div class="likes-back" onclick="closeLikesView()">
@@ -866,7 +820,7 @@
         </div>
     </div>
 
-    <!-- ═══ ПРОФИЛЬ ═══ -->
+    <!-- ПРОФИЛЬ -->
     <div class="profile-overlay" id="profileOverlay">
         <div class="profile-header-bar">
             <div class="profile-back-btn" onclick="closeProfile()">
@@ -932,7 +886,7 @@
         </div>
     </div>
 
-    <!-- ═══ МОДАЛЬНОЕ ОКНО УДАЛЕНИЯ ═══ -->
+    <!-- МОДАЛЬНОЕ ОКНО УДАЛЕНИЯ -->
     <div class="delete-modal" id="deleteModal">
         <div class="delete-modal-card">
             <div class="delete-modal-icon">⚠️</div>
@@ -1119,7 +1073,7 @@
             window.location.href = "chats.html?open=" + lastMatchedUser.telegram_id;
         }
 
-        // ═══ ПЛАВНЫЕ СВАЙПЫ ═══
+        // ПЛАВНЫЕ СВАЙПЫ
         let dragState = {
             isDragging: false,
             startX: 0,
@@ -1231,7 +1185,7 @@
             dragState.card = null;
         }
 
-        // ═══ ПАНЕЛЬ ЛАЙКОВ ═══
+        // ПАНЕЛЬ ЛАЙКОВ
         function openLikesView() {
             document.getElementById("likesView").classList.add("active");
             loadLikes("incoming");
@@ -1274,10 +1228,10 @@
                     return;
                 }
 
-                content.innerHTML = data.map((u, idx) => {
+                content.innerHTML = data.map((u) => {
                     if (tab === "incoming") {
                         return `
-                            <div class="like-card" style="animation-delay: ${idx * 0.05}s;">
+                            <div class="like-card">
                                 <img src="${u.photo || 'images/girl.png'}" class="like-avatar" onerror="this.src='images/girl.png'">
                                 <div class="like-info">
                                     <div class="like-name">${u.name}, ${u.age}</div>
@@ -1296,7 +1250,7 @@
                     } else {
                         const mutual = u.is_mutual ? '<span class="mutual-badge">💕 МЭТЧ</span>' : '';
                         return `
-                            <div class="like-card" style="animation-delay: ${idx * 0.05}s;">
+                            <div class="like-card">
                                 <img src="${u.photo || 'images/girl.png'}" class="like-avatar" onerror="this.src='images/girl.png'">
                                 <div class="like-info">
                                     <div class="like-name">${u.name}, ${u.age}${mutual}</div>
@@ -1402,7 +1356,7 @@
             }
         }
 
-        // ═══ ПРОФИЛЬ ═══
+        // ПРОФИЛЬ
         let profileData = null;
 
         async function openProfile() {
@@ -1523,7 +1477,7 @@
             }
         }
 
-        // ═══ УДАЛЕНИЕ АККАУНТА ═══
+        // УДАЛЕНИЕ АККАУНТА
         function openDeleteModal() {
             document.getElementById("deleteModal").classList.add("active");
             if (navigator.vibrate) navigator.vibrate(20);
@@ -1574,22 +1528,26 @@
             if (e.target.id === "deleteModal") closeDeleteModal();
         });
 
-        // ═══ БЕЙДЖИ ═══
-        async function checkLikesBadge() {
+        // БЕЙДЖИ — только когда окно активно
+        let isActive = true;
+        document.addEventListener("visibilitychange", () => {
+            isActive = !document.hidden;
+            if (isActive) checkBadges();
+        });
+
+        async function checkBadges() {
             try {
                 const res = await fetch(API_URL + "/api/likes/incoming?telegram_id=" + getTelegramId());
-                const data = await res.json();
-                const badge = document.getElementById("likesBadge");
-                if (data.length > 0) {
-                    badge.innerText = data.length > 99 ? "99+" : data.length;
-                    badge.classList.add("active");
+                const likesData = await res.json();
+                const likesBadge = document.getElementById("likesBadge");
+                if (likesData.length > 0) {
+                    likesBadge.innerText = likesData.length > 99 ? "99+" : likesData.length;
+                    likesBadge.classList.add("active");
                 } else {
-                    badge.classList.remove("active");
+                    likesBadge.classList.remove("active");
                 }
             } catch (e) {}
-        }
 
-        async function checkUnread() {
             try {
                 const res = await fetch(API_URL + "/api/messages/unread?telegram_id=" + getTelegramId());
                 const data = await res.json();
@@ -1605,10 +1563,10 @@
         }
 
         loadProfiles();
-        checkUnread();
-        checkLikesBadge();
-        setInterval(checkUnread, 10000);
-        setInterval(checkLikesBadge, 15000);
+        checkBadges();
+        setInterval(() => {
+            if (isActive) checkBadges();
+        }, 20000);
     </script>
 </body>
     </html>
