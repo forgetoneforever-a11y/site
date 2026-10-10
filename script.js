@@ -1,6 +1,7 @@
 let currentScreen = 0;
-const screens = ["language", "name", "gender", "age", "bio", "photo", "done"];
+const screens = ["language", "name", "gender", "preferences", "age", "bio", "photo", "done"];
 const userData = { language: "ru" };
+let selectedPrefs = [];
 
 const API_URL = "https://backend-2tcl.onrender.com";
 
@@ -241,6 +242,10 @@ function nextScreen() {
         userData.lookingFor = lookingFor.dataset.value;
     }
 
+    if (screens[currentScreen] === "preferences") {
+        userData.preferences = selectedPrefs.join(",");
+    }
+
     if (screens[currentScreen] === "age") {
         userData.age = document.getElementById("my-age-value").innerText;
         userData.minAge = document.getElementById("min-age-value").innerText;
@@ -272,6 +277,20 @@ function selectChoice(el) {
     if (navigator.vibrate) navigator.vibrate(10);
 }
 
+// Переключение предпочтений (можно несколько)
+function togglePref(el) {
+    const value = el.dataset.value;
+    if (!value) return;
+    if (selectedPrefs.includes(value)) {
+        selectedPrefs = selectedPrefs.filter(p => p !== value);
+        el.classList.remove("selected");
+    } else {
+        selectedPrefs.push(value);
+        el.classList.add("selected");
+    }
+    if (navigator.vibrate) navigator.vibrate(10);
+}
+
 function handlePhoto(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -292,7 +311,8 @@ function handlePhoto(event) {
 
 function goToPhoto() {
     userData.bio = document.getElementById("input-bio").value.trim();
-    showScreen(5);
+    // экран photo теперь индекс 6, поэтому показываем его напрямую
+    showScreen(6);
 }
 
 function skipPhoto() {
@@ -324,6 +344,7 @@ async function finishOnboarding() {
                 bio: userData.bio || null,
                 photo: userData.photo || null,
                 banner: "default",
+                preferences: userData.preferences || "",
                 language: userData.language
             })
         });
@@ -345,6 +366,7 @@ async function finishOnboarding() {
             "<p><span>" + t("age") + "</span> <strong>" + (userData.age || "—") + "</strong></p>" +
             "<p><span>" + t("range") + "</span> <strong>" + userData.minAge + "–" + userData.maxAge + "</strong></p>" +
             "<p><span>" + t("bio") + "</span> <strong>" + (userData.bio || t("notSpecified")) + "</strong></p>" +
+            (userData.preferences ? "<p><span>Интересы</span> <strong>" + userData.preferences + "</strong></p>" : "") +
             (userData.photo ? "<p><span>" + t("photo") + "</span> <strong>" + t("photoLoaded") + "</strong></p>" : "");
     }
 
@@ -353,7 +375,7 @@ async function finishOnboarding() {
         localStorage.setItem("emberRegistered", "true");
     } catch (e) { console.warn("localStorage недоступен", e); }
 
-    showScreen(6);
+    showScreen(7);
 }
 
 function resetRegistration() {
