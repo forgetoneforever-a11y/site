@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0618">
+    <meta name="theme-color" content="#1a1a1a">
     <title>Ember — Знакомства</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="icon" href="images/logo.png" type="image/png">
@@ -109,7 +109,45 @@
             </div>
         </div>
 
-        <!-- ЭКРАН 4: Возраст -->
+        <!-- ЭКРАН 4: Предпочтения -->
+        <div class="screen" id="screen-preferences">
+            <div class="avatar-wrapper">
+                <img src="images/girl.png" alt="Ember" class="avatar">
+            </div>
+            <h1>Твои предпочтения</h1>
+            <p class="subtitle">Выбери, что тебе интересно</p>
+
+            <div class="pref-grid" id="prefGrid">
+                <div class="pref-card" data-value="games" onclick="togglePref(this)">
+                    <span class="pref-emoji">🎮</span>
+                    <span class="pref-name">Игры</span>
+                </div>
+                <div class="pref-card" data-value="anime" onclick="togglePref(this)">
+                    <span class="pref-emoji">🌸</span>
+                    <span class="pref-name">Аниме</span>
+                </div>
+                <div class="pref-card" data-value="chat" onclick="togglePref(this)">
+                    <span class="pref-emoji">💬</span>
+                    <span class="pref-name">Общение</span>
+                </div>
+                <div class="pref-card" data-value="dating" onclick="togglePref(this)">
+                    <span class="pref-emoji">💕</span>
+                    <span class="pref-name">Знакомства</span>
+                </div>
+                <div class="pref-card" data-value="flirt" onclick="togglePref(this)">
+                    <span class="pref-emoji">😘</span>
+                    <span class="pref-name">Флирт</span>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-back" onclick="prevScreen()">←</button>
+                <button class="btn-next" onclick="nextScreen()">Далее</button>
+            </div>
+            <button class="btn-skip" onclick="nextScreen()">Пропустить</button>
+        </div>
+
+        <!-- ЭКРАН 5: Возраст -->
         <div class="screen" id="screen-age">
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
@@ -142,7 +180,7 @@
             </div>
         </div>
 
-        <!-- ЭКРАН 5: Описание -->
+        <!-- ЭКРАН 6: Описание -->
         <div class="screen" id="screen-bio">
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
@@ -165,7 +203,7 @@
             <button class="btn-skip" onclick="goToPhoto()" data-i18n="skip">Пропустить</button>
         </div>
 
-        <!-- ЭКРАН 6: Фото -->
+        <!-- ЭКРАН 7: Фото -->
         <div class="screen" id="screen-photo">
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
@@ -197,7 +235,7 @@
             <button class="btn-skip" onclick="skipPhoto()" data-i18n="skip">Пропустить</button>
         </div>
 
-        <!-- ЭКРАН 7: Готово -->
+        <!-- ЭКРАН 8: Готово -->
         <div class="screen" id="screen-done">
             <div class="avatar-wrapper">
                 <img src="images/girl.png" alt="Ember" class="avatar">
